@@ -1,0 +1,73 @@
+@import "tailwindcss";
+@import "swiper/css";
+@import "swiper/css/navigation";
+/* globals.css or tailwind.css */
+/* globals.css */
+.clip-left {
+  clip-path: polygon(0 0, 0% 120%, 100% 100%);
+}
+.clip-triangle {
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+}
+.group-hover\:clip-triangle {
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+}
+
+@keyframes bounce-slow {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-15px); }
+}
+
+.animate-bounce-slow {
+  animation: bounce-slow 3s infinite ease-in-out;
+}
+
+@keyframes wave {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(20px); }
+}
+
+.animate-wave {
+  animation: wave 4s infinite ease-in-out;
+}
+
+.hover\:shine {
+  position: relative;
+  overflow: hidden;
+}
+
+.hover\:shine::before {
+  position: absolute;
+  content: "";
+  top: 0;
+  left: -140%;
+  bottom: 0;
+  width: 100%;
+  background-image: linear-gradient(
+    to right,
+    transparent 50%,
+    rgba(255, 255, 255, 0.3) 100%
+  );
+  transform: skewX(-25deg);
+  transition: 0.5s ease;
+  z-index: 1;
+}
+
+.hover\:shine:hover::before {
+  left: 140%;
+}
+.client-carousel__hover {
+  padding: 17.5px 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  border: 1px solid #D7984E;
+  border-radius: 50px;
+  transition: opacity 300ms ease;
+}
+
+.client-carousel__image {
+  max-width: 100%;
+  height: auto;
+}

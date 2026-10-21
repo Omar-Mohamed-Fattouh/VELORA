@@ -1,0 +1,289 @@
+import { useEffect, useRef, useState } from "react";
+import { Home, Ruler, MapPin } from "lucide-react";
+import { useTranslation } from "react-i18next";
+// eslint-disable-next-line no-unused-vars
+import { motion } from "framer-motion";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, EffectFade } from "swiper/modules";
+
+import "swiper/css";
+import "swiper/css/effect-fade";
+
+import img1 from "../assets/Hero1.jpg";
+import img2 from "../assets/Hero2.jpg";
+import img3 from "../assets/Hero3.jpg";
+import heroshapeBu from "../assets/heroshapeBu.png";
+import heroshapeSt from "../assets/heroshapeSt.png";
+import heroshapeWa from "../assets/heroshapeWa.png";
+
+const SLIDE_INTERVAL = 5000;
+
+export function Hero() {
+  const { t, i18n } = useTranslation();
+  const isRTL = i18n.language === "ar";
+  const slides = [
+    {
+      id: 1,
+      subtitle: t("hero.subtitle"),
+      title: (
+        <>
+          {t("hero.slide1.titleStart")}{" "}
+          <span className="text-orange-500">
+            {t("hero.slide1.titleAccent")}
+          </span>{" "}
+          <br /> {t("hero.slide1.titleEnd")}
+        </>
+      ),
+      text: t("hero.slide1.text"),
+      stats: [
+        { icon: <Home className="w-5 h-5" />, text: t("hero.slide1.stat1") },
+        { icon: <Ruler className="w-5 h-5" />, text: t("hero.slide1.stat2") },
+      ],
+      image: img1,
+      location: t("hero.slide1.location"),
+    },
+    {
+      id: 2,
+      subtitle: t("hero.subtitle"),
+      title: (
+        <>
+          {t("hero.slide2.titleStart")}{" "}
+          <span className="text-orange-500">
+            {t("hero.slide2.titleAccent")}
+          </span>{" "}
+          <br />
+          {t("hero.slide2.titleEnd")}
+        </>
+      ),
+      text: t("hero.slide2.text"),
+      stats: [
+        { icon: <Home className="w-5 h-5" />, text: t("hero.slide2.stat1") },
+        { icon: <Ruler className="w-5 h-5" />, text: t("hero.slide2.stat2") },
+      ],
+      image: img2,
+      location: t("hero.slide2.location"),
+    },
+    {
+      id: 3,
+      subtitle: t("hero.subtitle"),
+      title: (
+        <>
+          {t("hero.slide3.titleStart")}{" "}
+          <span className="text-orange-500">
+            {t("hero.slide3.titleAccent")}
+          </span>{" "}
+          <br />
+          {t("hero.slide3.titleEnd")}
+        </>
+      ),
+      text: t("hero.slide3.text"),
+      stats: [
+        { icon: <Home className="w-5 h-5" />, text: t("hero.slide3.stat1") },
+        { icon: <Ruler className="w-5 h-5" />, text: t("hero.slide3.stat2") },
+      ],
+      image: img3,
+      location: t("hero.slide3.location"),
+    },
+  ];
+
+  const swiperRef = useRef(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const gotoSlide = (index) => {
+    if (swiperRef.current) {
+      swiperRef.current.swiper.slideToLoop(index);
+    }
+  };
+
+  useEffect(() => {
+    if (swiperRef.current) {
+      const swiper = swiperRef.current.swiper;
+      const el = swiper.el;
+
+      const handleEnter = () => swiper.autoplay.stop();
+      const handleLeave = () => swiper.autoplay.start();
+
+      el.addEventListener("mouseenter", handleEnter);
+      el.addEventListener("mouseleave", handleLeave);
+
+      return () => {
+        el.removeEventListener("mouseenter", handleEnter);
+        el.removeEventListener("mouseleave", handleLeave);
+      };
+    }
+  }, []);
+
+  return (
+    <section
+      className="relative flex items-center overflow-hidden bg-gray-900 w-full h-screen"
+      dir={isRTL ? "rtl" : "ltr"}
+    >
+      <Swiper
+        ref={swiperRef}
+        modules={[Autoplay, EffectFade]}
+        effect="fade"
+        fadeEffect={{ crossFade: true }}
+        autoplay={{ delay: SLIDE_INTERVAL, disableOnInteraction: false }}
+        loop
+        dir={isRTL ? "rtl" : "ltr"}
+        rtl={isRTL}
+        onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
+        className="relative w-full h-full"
+      >
+        {slides.map((s) => (
+          <SwiperSlide key={s.id}>
+            <motion.div
+              key={`${s.id}-${activeIndex}`}
+              className="relative w-full h-full"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.8 }}
+            >
+              <div className={`absolute inset-0 grid grid-cols-1 lg:grid-cols-2 items-center ${isRTL ? "lg:[direction:rtl]" : ""}`}>
+                <div className={`relative flex flex-col justify-center h-full text-white space-y-4 overflow-hidden px-6 sm:px-10 md:px-16 lg:pr-20 lg:pl-15 ${isRTL ? "text-right" : "text-left"}`}>
+                  <motion.img
+                    src={heroshapeBu}
+                    alt="background shape"
+                    className="absolute -bottom-0 left-0 object-contain opacity-80"
+                    initial={{ x: -200, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ duration: 1 }}
+                  />
+
+                  <motion.img
+                    src={heroshapeSt}
+                    alt="star"
+                    className={`absolute ${isRTL ? "left-60" : "right-60"} top-20 w-25 h-25 z-10`}
+                    initial={{ opacity: 0, y: -50 }}
+                    animate={{ y: [0, -20, 0], opacity: 1 }}
+                    transition={{
+                      duration: 3,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }}
+                  />
+
+                  <motion.img
+                    src={heroshapeWa}
+                    alt="wave"
+                    className={`absolute ${isRTL ? "left-35" : "right-35"} top-55 w-40 h-10 z-10`}
+                    initial={{ opacity: 0, x: isRTL ? -50 : 50 }}
+                    animate={{ x: isRTL ? [0, -20, 0] : [0, 20, 0], opacity: 1 }}
+                    transition={{
+                      duration: 4,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }}
+                  />
+
+                  <motion.div
+                    className="relative z-20"
+                    initial={{ x: -100, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ duration: 0.8, delay: 0.2 }}
+                  >
+                    <div className="inline-flex items-center text-xs sm:text-sm md:text-3xl bg-white h-7 md:h-10 text-orange-500 font-medium px-3 md:px-6 rounded-full shadow">
+                      {isRTL ? "←" : "→"} {s.subtitle}
+                    </div>
+                  </motion.div>
+
+                  <motion.h1
+                    className="relative z-20 text-lg sm:text-2xl md:text-3xl lg:text-[65px] font-bold leading-snug"
+                    initial={{ x: -100, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ duration: 0.9, delay: 0.3 }}
+                  >
+                    {s.title}
+                  </motion.h1>
+
+                  <motion.p
+                    className="relative z-20 text-sm md:text-xl text-gray-300 leading-relaxed max-w-md"
+                    initial={{ x: -100, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ duration: 1, delay: 0.4 }}
+                  >
+                    {s.text}
+                  </motion.p>
+
+                  <motion.ul
+                    className={`relative z-20 flex mt-1 flex-wrap ${isRTL ? "flex-row-reverse" : ""}`}
+                    initial={{ x: -100, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ duration: 1, delay: 0.6 }}
+                  >
+                    {s.stats.map((st, i) => (
+                      <li
+                        key={i}
+                        className="flex items-center text-xs md:text-sm lg:text-3xl gap-2 border border-gray-600 px-4 py-3 bg-black/40"
+                      >
+                        {st.icon}
+                        <span className="text-white font-medium">
+                          {st.text}
+                        </span>
+                      </li>
+                    ))}
+                  </motion.ul>
+                </div>
+
+                <motion.div
+                  className="hidden lg:block relative w-full h-full border-l-4 border-white"
+                  initial={{ x: 200, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  transition={{ duration: 1 }}
+                >
+                  <img
+                    src={s.image}
+                    alt="hero"
+                    className="w-full h-full object-cover"
+                  />
+
+                  {/* Location banner */}
+                  <motion.div
+                    className="absolute text-xl lg:text-2xl left-12 top-3/5 "
+                    initial={{ y: 100, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ duration: 1, delay: 0.7 }}
+                  >
+                    <div className="bg-orange-500 text-white py-4 lg:py-6 px-6 lg:px-10 shadow-lg flex items-center gap-3 transform -rotate-90 origin-bottom-left border-4 border-white max-w-md">
+                      <MapPin className="w-6 h-6" />
+                      <span className="font-medium whitespace-pre-line text-sm lg:text-base">
+                        {s.location}
+                      </span>
+                    </div>
+                  </motion.div>
+                </motion.div>
+              </div>
+
+              {/* Mobile background */}
+              <div className="lg:hidden absolute inset-0 z-0">
+                <img
+                  src={s.image}
+                  alt="hero"
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-black/40"></div>
+              </div>
+            </motion.div>
+          </SwiperSlide>
+        ))}
+      </Swiper>
+
+      <div className="absolute bottom-4 md:bottom-6 md:left-4/6 left-2/4  sm:translate-x-1/2 flex items-center gap-2 md:gap-3 z-50">
+        {slides.map((s, i) => (
+          <button
+            key={s.id}
+            onClick={() => gotoSlide(i)}
+            aria-label={`Go to slide ${i + 1}`}
+            className={`w-8 h-8 md:w-10 md:h-10 lg:w-11 lg:h-11 rounded-full flex items-center justify-center text-base md:text-lg lg:text-xl font-semibold transition-colors duration-300 ${
+              i === activeIndex
+                ? "bg-orange-500 text-white"
+                : "bg-white text-gray-900 hover:bg-gray-200"
+            }`}
+          >
+            {String(i + 1).padStart(2, "0")}
+          </button>
+        ))}
+      </div>
+    </section>
+  );
+}
