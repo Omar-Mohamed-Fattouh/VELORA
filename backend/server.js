@@ -10,6 +10,11 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 const JWT_SECRET = process.env.JWT_SECRET || 'velora-dev-secret';
 
+const extraOrigins = String(process.env.CLIENT_ORIGINS || process.env.FRONTEND_URL || '')
+  .split(',')
+  .map((value) => value.trim().replace(/\/$/, ''))
+  .filter(Boolean);
+
 const allowedOrigins = [
   'http://localhost:5173',
   'http://127.0.0.1:5173',
@@ -21,10 +26,26 @@ const allowedOrigins = [
   'http://127.0.0.1:4173',
   'http://localhost:4174',
   'http://127.0.0.1:4174',
+  ...extraOrigins,
 ];
 
+const isAllowedOrigin = (origin) => {
+  if (!origin) return true;
+  if (allowedOrigins.includes(origin)) return true;
+  return /^https:\/\/([a-z0-9-]+\.)*vercel\.app$/i.test(origin);
+};
+
+const cookieOptions = {
+  httpOnly: true,
+  sameSite: process.env.VERCEL ? 'none' : 'lax',
+  secure: Boolean(process.env.VERCEL),
+  maxAge: 7 * 24 * 60 * 60 * 1000,
+};
+
 app.use(cors({
-  origin: allowedOrigins,
+  origin(origin, callback) {
+    callback(null, isAllowedOrigin(origin));
+  },
   credentials: true,
 }));
 app.use(express.json({ limit: '2mb' }));
@@ -42,6 +63,26 @@ const isEmail = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(value || '')
 const subscribers = [];
 
 const users = [];
+
+const seedAdmin = async () => {
+  const existing = users.find((user) => user.email === 'admin@velora.com');
+  if (!existing) {
+    users.push({
+      id: 1,
+      name: 'VELORA Admin',
+      email: 'admin@velora.com',
+      passwordHash: await bcrypt.hash('Admin123!', 10),
+      role: 'admin',
+    });
+  }
+};
+
+const ready = seedAdmin();
+app.use(async (_req, _res, next) => {
+  await ready;
+  next();
+});
+
 const properties = [
   {
     id: 1,
@@ -236,6 +277,10 @@ const adminOnly = (req, res, next) => {
   next();
 };
 
+app.get('/', (req, res) => {
+  res.json({ ok: true, name: 'VELORA API' });
+});
+
 app.get('/api/v1/health', (req, res) => {
   res.json({ ok: true, message: 'VELORA backend is running.' });
 });
@@ -289,11 +334,7 @@ app.post('/api/v1/auth/register', async (req, res) => {
   users.push(user);
 
   const token = createToken(user);
-  res.cookie('token', token, {
-    httpOnly: true,
-    sameSite: 'lax',
-    maxAge: 7 * 24 * 60 * 60 * 1000,
-  });
+  res.cookie('token', token, cookieOptions);
 
   res.status(201).json({
     message: 'Registration successful.',
@@ -322,11 +363,7 @@ app.post('/api/v1/auth/login', async (req, res) => {
   }
 
   const token = createToken(user);
-  res.cookie('token', token, {
-    httpOnly: true,
-    sameSite: 'lax',
-    maxAge: 7 * 24 * 60 * 60 * 1000,
-  });
+  res.cookie('token', token, cookieOptions);
 
   res.json({
     message: 'Login successful.',
@@ -352,7 +389,7 @@ app.get('/api/v1/auth/me', (req, res) => {
 });
 
 app.post('/api/v1/auth/logout', (req, res) => {
-  res.clearCookie('token');
+  res.clearCookie('token', cookieOptions);
   res.json({ message: 'Logged out successfully.' });
 });
 
@@ -447,21 +484,12 @@ app.get('/api/v1/appointments', authMiddleware, adminOnly, (req, res) => {
   res.json({ data: appointments });
 });
 
-const seedAdmin = async () => {
-  const existing = users.find((user) => user.email === 'admin@velora.com');
-  if (!existing) {
-    users.push({
-      id: 1,
-      name: 'VELORA Admin',
-      email: 'admin@velora.com',
-      passwordHash: await bcrypt.hash('Admin123!', 10),
-      role: 'admin',
-    });
-  }
-};
+module.exports = app;
 
-seedAdmin().then(() => {
-  app.listen(PORT, () => {
-    console.log(`VELORA backend listening on http://localhost:${PORT}`);
+if (!process.env.VERCEL) {
+  ready.then(() => {
+    app.listen(PORT, () => {
+      console.log(`VELORA backend listening on http://localhost:${PORT}`);
+    });
   });
-});
+}
