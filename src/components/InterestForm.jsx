@@ -6,7 +6,7 @@ import aboutSection2 from "../assets/aboutSection2.png";
 import aboutSection3 from "../assets/aboutSection3.png";
 import aboutSection6 from "../assets/aboutSection6.png";
 import whiteLogo from "../assets/whiteLogo.png";
-import heroShapeB from "../assets/heroShapeB.png";
+import heroShapeB from "../assets/heroshapeB.png";
 
 export default function InterestForm() {
   const { t, i18n } = useTranslation();
