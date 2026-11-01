@@ -8,7 +8,7 @@ import CircularText from "./CircularText";
 import BrandLogo from "./BrandLogo.jsx";
 import aboutSection3 from "../assets/aboutSection3.png";
 import aboutSection6 from "../assets/aboutSection6.png";
-import heroShapeB from "../assets/heroShapeB.png";
+import heroShapeB from "../assets/heroshapeB.png";
 
 export default function InterestForm() {
   const { t, i18n } = useTranslation();
