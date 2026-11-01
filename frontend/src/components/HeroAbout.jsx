@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { ChevronRight } from "lucide-react";
-import heroHouse from "../assets/About.jpg";
+import heroHouse from "../assets/About.webp";
 import { NavLink } from "react-router-dom";
 import i18n from "../i18n";
 

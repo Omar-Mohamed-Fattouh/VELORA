@@ -72,14 +72,14 @@ export default function InterestForm() {
               transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
             />
             <div className="relative z-[20] w-[60px] sm:w-[70px] md:w-[90px] h-[60px] sm:h-[70px] md:h-[90px] rounded-full bg-orange-500 grid place-items-center text-white">
-              <img src={whiteLogo} alt="MSGA Logo" />
+              <img src={whiteLogo} alt="VELORA Logo" />
             </div>
           </div>
 
           {/* Brand Header */}
           <div className="text-center mb-6">
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
-              <span className="text-orange-500">MSGA</span> {t("Real Estate")}
+              <span className="text-orange-500">VELORA</span> {t("Real Estate")}
             </h1>
             <p className="text-gray-700 mt-2 text-sm sm:text-base">
               {t("Building dreams, creating investments.")}
@@ -187,7 +187,7 @@ export default function InterestForm() {
           {/* Footer */}
           <p className="text-xs text-gray-500 text-center mt-6">
             © {new Date().getFullYear()}{" "}
-            <span className="text-orange-500 font-semibold">MSGA</span>.{" "}
+            <span className="text-orange-500 font-semibold">VELORA</span>.{" "}
             {t("All rights reserved.")}
           </p>
         </div>

@@ -14,7 +14,7 @@ function LanguageSwitcher() {
     <button
       onClick={toggleLanguage}
       className="text-sm font-medium text-slate-700 hover:text-orange-500"
-      aria-label="Toggle language"
+      aria-label={isArabic ? "English" : "العربية"}
     >
       {isArabic ? "English" : "العربية"}
     </button>

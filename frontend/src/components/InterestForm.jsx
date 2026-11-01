@@ -1,17 +1,19 @@
 import { useState } from "react";
+import { useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import apiRequest from "../services/api.js";
 
-import aboutSection2 from "../assets/aboutSection2.png";
+import CircularText from "./CircularText";
+import BrandLogo from "./BrandLogo.jsx";
 import aboutSection3 from "../assets/aboutSection3.png";
 import aboutSection6 from "../assets/aboutSection6.png";
-import whiteLogo from "../assets/whiteLogo.png";
 import heroShapeB from "../assets/heroShapeB.png";
 
 export default function InterestForm() {
   const { t, i18n } = useTranslation();
   const isRTL = i18n.language.startsWith("ar");
+  const { id: propertyId } = useParams();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -35,7 +37,7 @@ export default function InterestForm() {
     try {
       await apiRequest("/inquiries", {
         method: "POST",
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ ...formData, propertyId }),
       });
 
       setStatus({
@@ -44,7 +46,7 @@ export default function InterestForm() {
       });
       setFormData({ name: "", email: "", phone: "", interest: "", message: "" });
     } catch (error) {
-      setStatus({ type: "error", message: error.message || "Unable to submit request." });
+      setStatus({ type: "error", message: error.message || t("contact.formError") });
     } finally {
       setLoading(false);
     }
@@ -59,7 +61,8 @@ export default function InterestForm() {
       {/* Hero shape bottom-left */}
       <img
         src={heroShapeB}
-        alt="Decorative shape"
+        alt=""
+        aria-hidden="true"
         className="hidden sm:block absolute bottom-0 left-0 w-[350px] sm:w-[700px] opacity-40 pointer-events-none select-none z-0"
       />
 
@@ -69,7 +72,8 @@ export default function InterestForm() {
           {/* Floating decorative pyramids */}
           <motion.img
             src={aboutSection3}
-            alt="Decorative pyramids"
+            alt=""
+            aria-hidden="true"
             className="hidden sm:block absolute top-16 -left-22 -z-10 w-[60px] sm:w-[90px] opacity-80"
             animate={{ y: [0, 12, 0] }}
             transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
@@ -78,31 +82,26 @@ export default function InterestForm() {
           {/* Floating decorative dots */}
           <motion.img
             src={aboutSection6}
-            alt="Decorative dots"
+            alt=""
+            aria-hidden="true"
             className="hidden sm:block absolute bottom-20 -right-22 -z-10 w-[70px] sm:w-[130px] opacity-50"
             animate={{ y: [0, 15, 0] }}
             transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
           />
 
           {/* Rotating circular badge */}
-          <div className="hidden sm:grid absolute -top-18 -right-60 z-[5] w-[120px] sm:w-[150px] md:w-[200px] aspect-square rounded-full border-2 border-dashed border-orange-500 place-items-center">
-            <motion.img
-              src={aboutSection2}
-              alt="Circular text badge"
-              className="absolute inset-0 w-full h-full p-2"
-              animate={{ rotate: 360 }}
-              transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-            />
+          <div className="hidden sm:grid absolute -top-18 -right-60 z-[5] w-[120px] sm:w-[150px] md:w-[200px] aspect-square rounded-full border-2 border-dashed border-orange-500 place-items-center text-white">
+            <CircularText />
             <div className="relative z-[20] w-[60px] sm:w-[70px] md:w-[90px] h-[60px] sm:h-[70px] md:h-[90px] rounded-full bg-orange-500 grid place-items-center text-white">
-              <img src={whiteLogo} alt="MSGA Logo" />
+              <BrandLogo className="w-12 h-12 sm:w-14 sm:h-14" inverted />
             </div>
           </div>
 
           {/* Brand Header */}
           <div className="text-center mb-6">
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
-              <span className="text-orange-500">MSGA</span> {t("Real Estate")}
-            </h1>
+            <p className="text-2xl sm:text-3xl font-bold text-gray-900">
+              <span className="text-orange-500">VELORA</span> {t("Real Estate")}
+            </p>
             <p className="text-gray-700 mt-2 text-sm sm:text-base">
               {t("Building dreams, creating investments.")}
             </p>
@@ -154,12 +153,14 @@ export default function InterestForm() {
                 className="block text-gray-700 font-medium mb-1"
                 htmlFor="email"
               >
-                {t("Email")}
+                {t("Email")} <span className="text-red-500">*</span>
               </label>
               <input
                 type="email"
                 id="email"
                 name="email"
+                required
+                autoComplete="email"
                 value={formData.email}
                 onChange={handleChange}
                 className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
@@ -222,7 +223,7 @@ export default function InterestForm() {
           {/* Footer */}
           <p className="text-xs text-gray-500 text-center mt-6">
             © {new Date().getFullYear()}{" "}
-            <span className="text-orange-500 font-semibold">MSGA</span>.{" "}
+            <span className="text-orange-500 font-semibold">VELORA</span>.{" "}
             {t("All rights reserved.")}
           </p>
         </div>

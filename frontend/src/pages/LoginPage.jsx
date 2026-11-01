@@ -2,14 +2,16 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../context/AuthContext.jsx";
+import PageMeta from "../components/PageMeta.jsx";
 
 export default function LoginPage() {
   const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { login } = useAuth();
   const navigate = useNavigate();
+  const isRTL = i18n.language === "ar";
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -17,17 +19,23 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      await login(form);
-      navigate("/");
+      const data = await login(form);
+      navigate(data.data?.user?.role === "admin" ? "/admin" : "/");
     } catch (err) {
-      setError(err.message || "Unable to log in.");
+      setError(err.message || t("auth.loginError"));
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-[70vh] bg-slate-50 flex items-center justify-center px-4 py-16">
+    <div className="min-h-[70vh] bg-slate-50 flex items-center justify-center px-4 py-16" dir={isRTL ? "rtl" : "ltr"}>
+      <PageMeta
+        title={t("seo.login.title")}
+        description={t("seo.login.description")}
+        path="/login"
+        noIndex
+      />
       <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
         <h1 className="text-3xl font-bold text-slate-900 mb-2">
           {t("auth.welcomeBack")}
@@ -42,11 +50,16 @@ export default function LoginPage() {
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="mb-2 block text-sm font-medium text-slate-700">
+            <label
+              htmlFor="login-email"
+              className="mb-2 block text-sm font-medium text-slate-700"
+            >
               {t("auth.email")}
             </label>
             <input
+              id="login-email"
               type="email"
+              autoComplete="email"
               required
               value={form.email}
               onChange={(event) =>
@@ -57,11 +70,16 @@ export default function LoginPage() {
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium text-slate-700">
+            <label
+              htmlFor="login-password"
+              className="mb-2 block text-sm font-medium text-slate-700"
+            >
               {t("auth.password")}
             </label>
             <input
+              id="login-password"
               type="password"
+              autoComplete="current-password"
               required
               value={form.password}
               onChange={(event) =>

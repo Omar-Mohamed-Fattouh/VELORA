@@ -15,21 +15,42 @@ import {
 } from "lucide-react";
 import { FaGoogle } from "react-icons/fa";
 
-import logo from "../assets/Logo.png";
 import LanguageSwitcher from "../components/LanguageSwitcher";
+import BrandLogo from "../components/BrandLogo.jsx";
+import apiRequest from "../services/api.js";
+import { SITE_NAME, siteContact } from "../data/site.js";
+import { useAuth } from "../context/AuthContext.jsx";
 
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [subscribeEmail, setSubscribeEmail] = useState("");
+  const [subscribeStatus, setSubscribeStatus] = useState("");
   const { t, i18n: i18nInstance } = useTranslation();
   const isRTL = i18nInstance.language === "ar";
+  const { user, logout } = useAuth();
+
+  const handleSubscribe = async (event) => {
+    event.preventDefault();
+    setSubscribeStatus("");
+    try {
+      await apiRequest("/newsletter", {
+        method: "POST",
+        body: JSON.stringify({ email: subscribeEmail }),
+      });
+      setSubscribeStatus(t("newsletter.success"));
+      setSubscribeEmail("");
+    } catch (error) {
+      setSubscribeStatus(error.message || t("newsletter.error"));
+    }
+  };
 
   const navLinks = [
     { to: "/", label: t("nav.home"), end: true },
     { to: "/about", label: t("nav.about"), end: true },
     { to: "/apartments", label: t("nav.apartments"), end: true },
     { to: "/projects", label: t("nav.projects"), end: true },
-    { to: "/page", label: t("nav.page"), end: true },
+    { to: "/services", label: t("nav.services"), end: true },
     { to: "/blog", label: t("nav.blog"), end: true },
   ];
 
@@ -55,22 +76,49 @@ export default function Header() {
 
           <div className="flex items-center gap-6 text-sm">
             <div className="flex items-center gap-4 border-s border-gray-500 ps-4">
-              <NavLink to="/login" className="hover:text-orange-400">
-                {t("header.login")}
-              </NavLink>
-              <NavLink to="/register" className="hover:text-orange-400">
-                {t("header.register")}
-              </NavLink>
+              {user ? (
+                <>
+                  {user.role === "admin" ? (
+                    <NavLink to="/admin" className="hover:text-orange-400">
+                      {t("seo.admin.title")}
+                    </NavLink>
+                  ) : null}
+                  <button
+                    type="button"
+                    onClick={logout}
+                    className="hover:text-orange-400"
+                  >
+                    {t("auth.logout")}
+                  </button>
+                </>
+              ) : (
+                <>
+                  <NavLink to="/login" className="hover:text-orange-400">
+                    {t("header.login")}
+                  </NavLink>
+                  <NavLink to="/register" className="hover:text-orange-400">
+                    {t("header.register")}
+                  </NavLink>
+                </>
+              )}
               <NavLink to="/help" className="hover:text-orange-400">
                 {t("header.help")}
               </NavLink>
             </div>
 
             <div className="flex items-center gap-3 ps-4">
-              <Facebook className="w-4 h-4 cursor-pointer hover:text-orange-400" />
-              <Twitter className="w-4 h-4 cursor-pointer hover:text-orange-400" />
-              <Linkedin className="w-4 h-4 cursor-pointer hover:text-orange-400" />
-              <FaGoogle className="w-4 h-4 cursor-pointer hover:text-orange-400" />
+              <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="hover:text-orange-400">
+                <Facebook className="w-4 h-4" />
+              </a>
+              <a href="https://x.com" target="_blank" rel="noopener noreferrer" aria-label="X" className="hover:text-orange-400">
+                <Twitter className="w-4 h-4" />
+              </a>
+              <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="hover:text-orange-400">
+                <Linkedin className="w-4 h-4" />
+              </a>
+              <a href={`mailto:${siteContact.email}`} aria-label="Email" className="hover:text-orange-400">
+                <FaGoogle className="w-4 h-4" />
+              </a>
             </div>
           </div>
         </div>
@@ -82,8 +130,8 @@ export default function Header() {
       >
         <div className="container mx-auto flex items-center justify-between py-3 px-6">
           <NavLink to="/" className="flex items-center no-underline gap-2">
-            <img src={logo} alt="Logo" className="w-14 h-14 object-contain" />
-            <span className="text-3xl font-bold text-gray-700">MSGA</span>
+            <BrandLogo className="w-14 h-14" />
+            <span className="text-3xl font-bold text-gray-700">{SITE_NAME}</span>
           </NavLink>
 
           <div className="hidden xl:flex items-center gap-6 2xl:gap-10">
@@ -115,7 +163,9 @@ export default function Header() {
             </NavLink>
             <LanguageSwitcher />
             <button
+              type="button"
               onClick={() => setSidebarOpen(true)}
+              aria-label={t("a11y.openSidebar")}
               className="overflow-hidden relative w-12 h-12 rounded-full bg-orange-400 flex items-center justify-center group"
             >
               <Grid className="w-6 h-6 text-white relative z-10" />
@@ -128,9 +178,7 @@ export default function Header() {
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-expanded={mobileOpen}
             aria-controls="primary-mobile-navigation"
-            aria-label={
-              mobileOpen ? "Close navigation menu" : "Open navigation menu"
-            }
+            aria-label={mobileOpen ? t("a11y.closeMenu") : t("a11y.openMenu")}
           >
             {mobileOpen ? (
               <X className="w-8 h-8" />
@@ -200,16 +248,18 @@ export default function Header() {
           className="fixed top-0 right-0 h-full max-w-[340px] w-full bg-[#333333] shadow-2xl flex flex-col z-50"
         >
           <button
+            type="button"
             onClick={() => setSidebarOpen(false)}
+            aria-label={t("a11y.closeSidebar")}
             className={`absolute top-4 ${isRTL ? "left-4" : "right-4"} text-gray-300 hover:text-orange-500`}
           >
             <X className="w-6 h-6" />
           </button>
 
           <div className="flex items-center border-b border-gray-700 py-6 px-6 gap-3">
-            <img src={logo} alt="Logo" className="w-10 h-10 object-contain" />
+            <BrandLogo className="w-10 h-10" inverted />
             <span className="text-2xl font-bold text-white tracking-wide">
-              MSGA
+              {SITE_NAME}
             </span>
           </div>
 
@@ -244,10 +294,10 @@ export default function Header() {
                       {t("header.sendEmail")}
                     </p>
                     <a
-                      href="mailto:info@company.com"
+                      href={`mailto:${siteContact.email}`}
                       className="text-white hover:text-orange-500"
                     >
-                      info@company.com
+                      {siteContact.email}
                     </a>
                   </div>
                 </li>
@@ -258,10 +308,10 @@ export default function Header() {
                       {t("header.callAgent")}
                     </p>
                     <a
-                      href="tel:+91123654900"
+                      href={siteContact.phoneHref}
                       className="text-white hover:text-orange-500"
                     >
-                      +91 123 654 900
+                      {siteContact.phone}
                     </a>
                   </div>
                 </li>
@@ -271,7 +321,7 @@ export default function Header() {
                     <p className="uppercase text-gray-400 text-xs">
                       {t("header.openingTime")}
                     </p>
-                    <p className="text-white">Hours: Mon–Fri: 8am – 7pm</p>
+                    <p className="text-white">{t("contact.hours")}</p>
                   </div>
                 </li>
               </ul>
@@ -283,9 +333,16 @@ export default function Header() {
               >
                 {t("header.getNotification")}
               </h3>
-              <form className="space-y-3">
+              <form className="space-y-3" onSubmit={handleSubscribe}>
+                <label htmlFor="sidebar-email" className="sr-only">
+                  {t("auth.email")}
+                </label>
                 <input
+                  id="sidebar-email"
                   type="email"
+                  required
+                  value={subscribeEmail}
+                  onChange={(event) => setSubscribeEmail(event.target.value)}
                   placeholder={t("auth.email")}
                   className="w-full border border-gray-600 bg-transparent px-3 py-2 text-sm rounded focus:outline-none text-white placeholder-gray-400"
                 />
@@ -295,6 +352,11 @@ export default function Header() {
                 >
                   {t("header.subscribeNow")}
                 </button>
+                {subscribeStatus ? (
+                  <p className="text-xs text-gray-300" role="status">
+                    {subscribeStatus}
+                  </p>
+                ) : null}
               </form>
             </div>
           </div>

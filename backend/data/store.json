@@ -1,0 +1,149 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "VELORA Admin",
+      "email": "admin@velora.com",
+      "passwordHash": "$2a$10$u4KZzcrIdcqFOwb/keEibuN3CsXx77g2Z3k4en3Zm/Qh7gPazk9Eq",
+      "role": "admin"
+    }
+  ],
+  "properties": [
+    {
+      "id": 1,
+      "title": "Nile Courtyard Residences",
+      "location": "Ismailia",
+      "type": "apartment",
+      "price": 1850000,
+      "area": 168,
+      "beds": 3,
+      "baths": 2,
+      "status": "Available",
+      "currency": "EGP",
+      "short": "Family apartments beside the waterfront corniche.",
+      "description": "Bright 3-bedroom apartments with balcony views, a landscaped courtyard, and practical layouts for daily family living.",
+      "amenities": [
+        "Parking",
+        "Security",
+        "Courtyard",
+        "Balcony"
+      ],
+      "image": "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=1200&q=80",
+      "images": [
+        "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=1200&q=80",
+        "https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=1200&q=80"
+      ],
+      "map": "https://maps.google.com/?q=Ismailia%20Egypt",
+      "mapEmbed": "https://maps.google.com/maps?q=Ismailia%2C%20Egypt&z=13&output=embed",
+      "video": "https://www.youtube.com/watch?v=ysz5S6PUM-U"
+    },
+    {
+      "id": 2,
+      "title": "Skyline Residency",
+      "location": "New Cairo",
+      "type": "apartment",
+      "price": 2450000,
+      "area": 210,
+      "beds": 4,
+      "baths": 3,
+      "status": "Under Construction",
+      "currency": "EGP",
+      "short": "High-floor homes with concierge services and city views.",
+      "description": "A residential tower designed for professionals and families who want space, light, and reliable building services.",
+      "amenities": [
+        "Concierge",
+        "Gym",
+        "Parking",
+        "Security"
+      ],
+      "image": "https://images.unsplash.com/photo-1460317442991-0ec209397118?auto=format&fit=crop&w=1200&q=80",
+      "images": [
+        "https://images.unsplash.com/photo-1460317442991-0ec209397118?auto=format&fit=crop&w=1200&q=80"
+      ],
+      "map": "https://maps.google.com/?q=New%20Cairo",
+      "mapEmbed": "https://maps.google.com/maps?q=New%20Cairo&z=13&output=embed",
+      "video": "https://www.youtube.com/watch?v=ysz5S6PUM-U"
+    },
+    {
+      "id": 3,
+      "title": "Garden Court Villas",
+      "location": "Sheikh Zayed",
+      "type": "villa",
+      "price": 4200000,
+      "area": 340,
+      "beds": 5,
+      "baths": 4,
+      "status": "Sold",
+      "currency": "EGP",
+      "short": "Private villas with gardens, pools, and quiet streets.",
+      "description": "A gated villa community with generous plots, indoor-outdoor living, and finishes suited to long-term family use.",
+      "amenities": [
+        "Private garden",
+        "Pool",
+        "Parking",
+        "Gated access"
+      ],
+      "image": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80",
+      "images": [
+        "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80"
+      ],
+      "map": "https://maps.google.com/?q=Sheikh%20Zayed%20Cairo",
+      "mapEmbed": "https://maps.google.com/maps?q=Sheikh%20Zayed&z=13&output=embed",
+      "video": "https://www.youtube.com/watch?v=ysz5S6PUM-U"
+    },
+    {
+      "id": 4,
+      "title": "Harbor View Residences",
+      "location": "Alexandria",
+      "type": "apartment",
+      "price": 1980000,
+      "area": 155,
+      "beds": 3,
+      "baths": 2,
+      "status": "Available",
+      "currency": "EGP",
+      "short": "Coastal apartments designed for long-term living.",
+      "description": "Sea-facing apartments with efficient plans, natural light, and walking access to the corniche.",
+      "amenities": [
+        "Sea view",
+        "Parking",
+        "Security"
+      ],
+      "image": "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80",
+      "images": [
+        "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80"
+      ],
+      "map": "https://maps.google.com/?q=Alexandria%20Corniche",
+      "mapEmbed": "https://maps.google.com/maps?q=Alexandria%20Corniche&z=13&output=embed",
+      "video": "https://www.youtube.com/watch?v=ysz5S6PUM-U"
+    },
+    {
+      "id": 5,
+      "title": "Capital Avenue Offices",
+      "location": "Riyadh - Al Qirawan",
+      "type": "commercial",
+      "price": 875000,
+      "area": 220,
+      "beds": 0,
+      "baths": 2,
+      "status": "Available",
+      "currency": "SAR",
+      "short": "Premium office floors in a landmark commercial address.",
+      "description": "Flexible office plates with a landscaped promenade, meeting rooms, and services suited to growing companies.",
+      "amenities": [
+        "Lobby",
+        "Parking",
+        "Meeting rooms"
+      ],
+      "image": "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1200&q=80",
+      "images": [
+        "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1200&q=80"
+      ],
+      "map": "https://maps.google.com/?q=Riyadh%20Al%20Qirawan",
+      "mapEmbed": "https://maps.google.com/maps?q=Riyadh%20Al%20Qirawan&z=13&output=embed",
+      "video": "https://www.youtube.com/watch?v=ysz5S6PUM-U"
+    }
+  ],
+  "inquiries": [],
+  "appointments": []
+}

@@ -34,10 +34,10 @@ export default function Footer() {
           <NavLink to="/" className={`flex items-center no-underline mb-4 ${isRTL ? "flex-row-reverse" : ""}`}>
             <img
               src={logo}
-              alt="MSGA Logo"
+              alt="VELORA Logo"
               className="w-14 h-14 object-contain"
             />
-            <span className={`${isRTL ? "mr-2" : "ml-2"} text-3xl font-bold text-white`}>MSGA</span>
+            <span className={`${isRTL ? "mr-2" : "ml-2"} text-3xl font-bold text-white`}>VELORA</span>
           </NavLink>
           <p className={`text-sm leading-relaxed ${isRTL ? "text-right" : "text-left"}`}>{t("footer.about")}</p>
           <div className={`flex mt-4 ${isRTL ? "flex-row-reverse gap-3" : "gap-4"}`}>

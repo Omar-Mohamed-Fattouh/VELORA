@@ -5,6 +5,7 @@ import { motion } from "framer-motion"
 import { Home, ArrowLeft, Compass, HelpCircle } from "lucide-react"
 import { Button } from "../components/ui/Button.jsx"
 import { useTranslation } from "react-i18next"
+import PageMeta from "../components/PageMeta.jsx"
 
 export default function NotFound() {
   const navigate = useNavigate()
@@ -23,6 +24,12 @@ export default function NotFound() {
       className="min-h-screen bg-gray-900 flex flex-col items-center justify-center px-4 text-white"
       dir={isRTL ? "rtl" : "ltr"}
     >
+      <PageMeta
+        title={t("seo.notFound.title")}
+        description={t("seo.notFound.description")}
+        path="/404"
+        noIndex
+      />
       <div className="max-w-2xl mx-auto text-center">
         {/* 404 Illustration */}
         <motion.div

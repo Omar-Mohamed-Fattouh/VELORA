@@ -8,15 +8,38 @@ require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-const JWT_SECRET = process.env.JWT_SECRET || 'msga-dev-secret';
+const JWT_SECRET = process.env.JWT_SECRET || 'velora-dev-secret';
+
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://127.0.0.1:5173',
+  'http://localhost:5174',
+  'http://127.0.0.1:5174',
+  'http://localhost:5175',
+  'http://127.0.0.1:5175',
+  'http://localhost:4173',
+  'http://127.0.0.1:4173',
+  'http://localhost:4174',
+  'http://127.0.0.1:4174',
+];
 
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://127.0.0.1:5173'],
+  origin: allowedOrigins,
   credentials: true,
 }));
 app.use(express.json({ limit: '2mb' }));
 app.use(cookieParser());
 app.use(morgan('dev'));
+app.use((req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+  res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+  next();
+});
+
+const isEmail = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(value || '').trim());
+const subscribers = [];
 
 const users = [];
 const properties = [
@@ -84,6 +107,97 @@ const properties = [
     image: 'https://images.unsplash.com/photo-1460317442991-0ec209397118?auto=format&fit=crop&w=1200&q=80',
     map: 'https://maps.google.com/?q=Doha%20West%20Bay',
     video: 'https://www.youtube.com/watch?v=ysz5S6PUM-U',
+  },
+  {
+    id: 6,
+    title: 'Zamalek Garden House',
+    location: 'Cairo - Zamalek',
+    price: 780000,
+    area: 22000,
+    status: 'Available',
+    short: 'A calm residential building beside the Nile with shared gardens.',
+    description: 'Family apartments and duplexes with river walks, doorman service, and upgraded kitchens.',
+    image: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1200&q=80',
+    map: 'https://maps.google.com/?q=Zamalek%20Cairo',
+    video: 'https://www.youtube.com/watch?v=ysz5S6PUM-U',
+  },
+  {
+    id: 7,
+    title: 'Al Yasmin Courtyards',
+    location: 'Riyadh - Al Yasmin',
+    price: 1120000,
+    area: 31000,
+    status: 'Under Construction',
+    short: 'Low-rise homes arranged around planted courtyards.',
+    description: 'A neighborhood-scale project with guest parking, shaded walkways, and family-sized units.',
+    image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80',
+    map: 'https://maps.google.com/?q=Al%20Yasmin%20Riyadh',
+    video: 'https://www.youtube.com/watch?v=ysz5S6PUM-U',
+  },
+  {
+    id: 8,
+    title: 'Stanley Shore Residences',
+    location: 'Alexandria - Stanley',
+    price: 640000,
+    area: 15000,
+    status: 'Available',
+    short: 'Sea-facing apartments designed for year-round living.',
+    description: 'Salt-resistant finishes, basement parking, and wide balconies along the corniche.',
+    image: 'https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=1200&q=80',
+    map: 'https://maps.google.com/?q=Stanley%20Alexandria',
+    video: 'https://www.youtube.com/watch?v=ysz5S6PUM-U',
+  },
+  {
+    id: 9,
+    title: 'Business Bay Lofts',
+    location: 'Dubai - Business Bay',
+    price: 890000,
+    area: 19000,
+    status: 'Available',
+    short: 'Loft-style homes for professionals who want city access.',
+    description: 'High ceilings, smart access, and a short walk to metro and offices.',
+    image: 'https://images.unsplash.com/photo-1493809842364-78817add7ffb?auto=format&fit=crop&w=1200&q=80',
+    map: 'https://maps.google.com/?q=Business%20Bay%20Dubai',
+    video: 'https://www.youtube.com/watch?v=ysz5S6PUM-U',
+  },
+  {
+    id: 10,
+    title: 'Ismailia Lake Houses',
+    location: 'Ismailia - Lake',
+    price: 430000,
+    area: 12000,
+    status: 'Available',
+    short: 'Small houses near the lake for weekends and family stays.',
+    description: 'Gardens, guest rooms, and a short drive to the city center and ferry.',
+    image: 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=1200&q=80',
+    map: 'https://maps.google.com/?q=Ismailia%20Lake',
+    video: 'https://www.youtube.com/watch?v=ysz5S6PUM-U',
+  },
+  {
+    id: 11,
+    title: 'King Abdullah Park Villas',
+    location: 'Riyadh - King Abdullah Park',
+    price: 1750000,
+    area: 28000,
+    status: 'Sold',
+    short: 'Detached villas facing a large public park.',
+    description: 'Private yards, driver rooms, and a layout suited to extended families.',
+    image: 'https://images.unsplash.com/photo-1613977257363-707ba9348227?auto=format&fit=crop&w=1200&q=80',
+    map: 'https://maps.google.com/?q=King%20Abdullah%20Park%20Riyadh',
+    video: 'https://www.youtube.com/watch?v=ysz5S6PUM-U',
+  },
+  {
+    id: 12,
+    title: 'Maadi Shade Lane',
+    location: 'Cairo - Maadi',
+    price: 520000,
+    area: 14000,
+    status: 'Available',
+    short: 'Tree-lined street building with mixed 2 and 3 bedroom homes.',
+    description: 'Quiet floors, street parking, and shops within a short walk.',
+    image: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1200&q=80',
+    map: 'https://maps.google.com/?q=Maadi%20Cairo',
+    video: 'https://www.youtube.com/watch?v=ysz5S6PUM-U',
   }
 ];
 
@@ -123,7 +237,22 @@ const adminOnly = (req, res, next) => {
 };
 
 app.get('/api/v1/health', (req, res) => {
-  res.json({ ok: true, message: 'MSGA backend is running.' });
+  res.json({ ok: true, message: 'VELORA backend is running.' });
+});
+
+app.post('/api/v1/newsletter', (req, res) => {
+  const { email } = req.body || {};
+
+  if (!isEmail(email)) {
+    return res.status(400).json({ message: 'A valid email is required.' });
+  }
+
+  const normalizedEmail = String(email).trim().toLowerCase();
+  if (!subscribers.includes(normalizedEmail)) {
+    subscribers.push(normalizedEmail);
+  }
+
+  res.status(201).json({ message: 'Subscribed successfully.', data: { email: normalizedEmail } });
 });
 
 app.post('/api/v1/auth/register', async (req, res) => {
@@ -131,6 +260,14 @@ app.post('/api/v1/auth/register', async (req, res) => {
 
   if (!name || !email || !password) {
     return res.status(400).json({ message: 'Name, email and password are required.' });
+  }
+
+  if (!isEmail(email)) {
+    return res.status(400).json({ message: 'A valid email is required.' });
+  }
+
+  if (String(password).length < 8) {
+    return res.status(400).json({ message: 'Password must be at least 8 characters.' });
   }
 
   const normalizedEmail = String(email).trim().toLowerCase();
@@ -198,14 +335,20 @@ app.post('/api/v1/auth/login', async (req, res) => {
   });
 });
 
-app.get('/api/v1/auth/me', authMiddleware, (req, res) => {
-  const user = users.find((item) => item.id === Number(req.user.sub));
+app.get('/api/v1/auth/me', (req, res) => {
+  const token = req.cookies?.token || req.headers.authorization?.replace('Bearer ', '');
 
-  if (!user) {
-    return res.status(404).json({ message: 'User not found.' });
+  if (!token) {
+    return res.json({ data: { user: null } });
   }
 
-  res.json({ data: { user: sanitizeUser(user) } });
+  try {
+    const payload = jwt.verify(token, JWT_SECRET);
+    const user = users.find((item) => item.id === Number(payload.sub));
+    return res.json({ data: { user: user ? sanitizeUser(user) : null } });
+  } catch (error) {
+    return res.json({ data: { user: null } });
+  }
 });
 
 app.post('/api/v1/auth/logout', (req, res) => {
@@ -252,6 +395,10 @@ app.post('/api/v1/inquiries', (req, res) => {
 
   if (!name || !email || !phone) {
     return res.status(400).json({ message: 'Name, email and phone are required.' });
+  }
+
+  if (!isEmail(email)) {
+    return res.status(400).json({ message: 'A valid email is required.' });
   }
 
   const inquiry = {
@@ -301,12 +448,12 @@ app.get('/api/v1/appointments', authMiddleware, adminOnly, (req, res) => {
 });
 
 const seedAdmin = async () => {
-  const existing = users.find((user) => user.email === 'admin@msga.com');
+  const existing = users.find((user) => user.email === 'admin@velora.com');
   if (!existing) {
     users.push({
       id: 1,
-      name: 'MSGA Admin',
-      email: 'admin@msga.com',
+      name: 'VELORA Admin',
+      email: 'admin@velora.com',
       passwordHash: await bcrypt.hash('Admin123!', 10),
       role: 'admin',
     });
@@ -315,6 +462,6 @@ const seedAdmin = async () => {
 
 seedAdmin().then(() => {
   app.listen(PORT, () => {
-    console.log(`MSGA backend listening on http://localhost:${PORT}`);
+    console.log(`VELORA backend listening on http://localhost:${PORT}`);
   });
 });

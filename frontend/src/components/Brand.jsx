@@ -47,7 +47,7 @@ export default function BrandCarousel() {
               </div>
 
               {/* Hover Image */}
-              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 border border-[#D7984E] rounded-full px-[42px] py-[17.5px]">
+              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 border border-orange-500 rounded-full px-[42px] py-[17.5px]">
                 <img
                   src={BrandHover}
                   alt={t("Brand Logo Hover")}

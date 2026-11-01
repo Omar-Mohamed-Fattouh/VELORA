@@ -1,25 +1,28 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 
-export default function AboutProject() {
+export default function AboutProject({ project }) {
   const { t, i18n } = useTranslation();
-  const isRTL = i18n.language === "ar"; // ✅ detect language
+  const isRTL = i18n.language === "ar";
+  const location = project?.location || t("Riyadh - Al Qirawan");
+  const mapQuery = encodeURIComponent(project?.location || "Riyadh Al Qirawan");
 
-  // Project data object (المحتوى كله بالـ t)
   const projectData = {
     title: t("About Project"),
-    description: t(
-      "The project features an eight-floors office tower designed in the elegant Salmani architectural style, surrounded by green spaces that cater to the evolving needs of businesses, offering modern office spaces and related amenities. Strategically located on King Salman Road in Al Qirawan, the development provides an ideal setting for companies seeking a prime business location."
-    ),
+    description:
+      project?.description ||
+      t(
+        "The project features an eight-floors office tower designed in the elegant Salmani architectural style, surrounded by green spaces that cater to the evolving needs of businesses, offering modern office spaces and related amenities. Strategically located on King Salman Road in Al Qirawan, the development provides an ideal setting for companies seeking a prime business location.",
+      ),
     properties: [
-      t("Riyadh"),
-      t("Office"),
-      t("7,728") + t("m²"),
-      t("67 Units"),
-      t("%48"),
+      location,
+      t(project?.status || "Available"),
+      `${Number(project?.area || 7728).toLocaleString()}${t("m²")}`,
+      project?.price
+        ? `$${Number(project.price).toLocaleString()}`
+        : t("67 Units"),
     ],
-    mapSrc:
-      "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3625.195166759534!2d46.6201!3d24.7833!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e2f038e9c5bb7e3%3A0x3c6e8bb1e8aef!2sKing%20Salman%20Rd%2C%20Al%20Qirawan%2C%20Riyadh!5e0!3m2!1sen!2ssa&basemap=satellite",
+    mapSrc: `https://maps.google.com/maps?q=${mapQuery}&z=13&output=embed`,
   };
 
   return (

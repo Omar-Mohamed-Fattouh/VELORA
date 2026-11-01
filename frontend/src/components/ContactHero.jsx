@@ -1,7 +1,9 @@
-import { memo } from "react";
+import { memo, useState } from "react";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
-import heroHouse from "../assets/About.jpg";
+import heroHouse from "../assets/About.webp";
+import apiRequest from "../services/api.js";
+import { siteContact, socialLinks } from "../data/site.js";
 import { User, Phone, Mail, FileText, Home } from "lucide-react";
 import {
   Facebook,
@@ -28,55 +30,65 @@ const fadeUp = {
 };
 
 // Contact Cards Data (outside component for performance)
+const socialHref = (id) =>
+  socialLinks.find((item) => item.id === id)?.href || "#";
+
 const contactCards = [
   {
-    href: "mailto:example@gmail.com",
+    href: `mailto:${siteContact.email}`,
     icon: <Mail className="w-8 h-8 text-orange-500" />,
     title: "Email",
-    text: "EmailAddress",
+    text: siteContact.email,
+    translateText: false,
     color: "group-hover:text-orange-500",
   },
   {
-    href: "tel:+201234567890",
-    icon: <Phone className="w-8 h-8 text-yellow-500" />,
+    href: siteContact.phoneHref,
+    icon: <Phone className="w-8 h-8 text-orange-500" />,
     title: "Phone",
-    text: "PhoneNumber",
-    color: "group-hover:text-yellow-500",
+    text: siteContact.phone,
+    translateText: false,
+    color: "group-hover:text-orange-500",
   },
   {
-    href: "https://wa.me/201234567890",
-    icon: <MessageCircle className="w-8 h-8 text-green-500" />,
+    href: siteContact.whatsapp,
+    icon: <MessageCircle className="w-8 h-8 text-orange-500" />,
     title: "WhatsApp",
-    text: "WhatsAppNumber",
-    color: "group-hover:text-green-500",
+    text: siteContact.phone,
+    translateText: false,
+    color: "group-hover:text-orange-500",
   },
   {
-    href: "https://linkedin.com/in/yourname",
-    icon: <Linkedin className="w-8 h-8 text-sky-600" />,
+    href: socialHref("linkedin"),
+    icon: <Linkedin className="w-8 h-8 text-orange-500" />,
     title: "LinkedIn",
-    text: "LinkedInProfile",
-    color: "group-hover:text-sky-600",
+    text: "VELORA",
+    translateText: false,
+    color: "group-hover:text-orange-500",
   },
   {
-    href: "https://facebook.com/yourpage",
-    icon: <Facebook className="w-8 h-8 text-blue-600" />,
+    href: socialHref("facebook"),
+    icon: <Facebook className="w-8 h-8 text-orange-500" />,
     title: "Facebook",
-    text: "FacebookPage",
-    color: "group-hover:text-blue-600",
+    text: "VELORA",
+    translateText: false,
+    color: "group-hover:text-orange-500",
   },
   {
-    href: "https://instagram.com/yourprofile",
-    icon: <Instagram className="w-8 h-8 text-pink-500" />,
+    href: socialHref("instagram"),
+    icon: <Instagram className="w-8 h-8 text-orange-500" />,
     title: "Instagram",
-    text: "InstagramProfile",
-    color: "group-hover:text-pink-500",
+    text: "@velora",
+    translateText: false,
+    color: "group-hover:text-orange-500",
   },
   {
     href: null,
-    icon: <MapPin className="w-8 h-8 text-red-500" />,
+    icon: <MapPin className="w-8 h-8 text-orange-500" />,
     title: "Location",
-    text: "LocationText",
-    color: "group-hover:text-red-500",
+    text: "social.locationText",
+    translateText: true,
+    color: "group-hover:text-orange-500",
   },
 ];
 
@@ -101,13 +113,55 @@ const ContactCard = memo(({ card, delay }) => {
           {t(card.title)}
         </h3>
       </div>
-      <p className={`text-gray-600 text-md ${card.color}`}>{t(card.text)}</p>
+      <p className={`text-gray-600 text-md ${card.color}`}>
+        {card.translateText === false ? card.text : t(card.text)}
+      </p>
     </motion.a>
   );
 });
 
 export default function Contact() {
   const { t, i18n } = useTranslation();
+  const [formData, setFormData] = useState({
+    name: "",
+    phone: "",
+    email: "",
+    interest: "",
+    message: "",
+  });
+  const [status, setStatus] = useState({ type: "idle", message: "" });
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (event) => {
+    setFormData({ ...formData, [event.target.name]: event.target.value });
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setLoading(true);
+    setStatus({ type: "idle", message: "" });
+    try {
+      await apiRequest("/inquiries", {
+        method: "POST",
+        body: JSON.stringify(formData),
+      });
+      setStatus({ type: "success", message: t("contact.formSuccess") });
+      setFormData({
+        name: "",
+        phone: "",
+        email: "",
+        interest: "",
+        message: "",
+      });
+    } catch (error) {
+      setStatus({
+        type: "error",
+        message: error.message || t("contact.formError"),
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <section className="relative" dir={i18n.language === "ar" ? "rtl" : "ltr"}>
@@ -177,29 +231,59 @@ export default function Contact() {
               )}
             </p>
 
-            {/* Form */}
-            <form action="#" className="space-y-4">
+            {status.message ? (
+              <p
+                role="status"
+                className={`mb-4 rounded-md border px-3 py-2 text-sm ${
+                  status.type === "success"
+                    ? "border-emerald-200 bg-emerald-50 text-emerald-700"
+                    : "border-red-200 bg-red-50 text-red-700"
+                }`}
+              >
+                {status.message}
+              </p>
+            ) : null}
+
+            <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div className="relative">
                   <User
-                    className="absolute left-3 top-3 text-gray-400"
+                    className="absolute start-3 top-3 text-gray-400"
                     size={18}
                   />
+                  <label htmlFor="contact-name" className="sr-only">
+                    {t("Full Name *")}
+                  </label>
                   <input
+                    id="contact-name"
+                    name="name"
                     type="text"
+                    required
+                    autoComplete="name"
+                    value={formData.name}
+                    onChange={handleChange}
                     placeholder={t("Full Name *")}
-                    className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 focus:outline-none text-sm"
+                    className="w-full ps-10 pe-4 py-2.5 rounded-lg border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 focus:outline-none text-sm"
                   />
                 </div>
                 <div className="relative">
                   <Phone
-                    className="absolute left-3 top-3 text-gray-400"
+                    className="absolute start-3 top-3 text-gray-400"
                     size={18}
                   />
+                  <label htmlFor="contact-phone" className="sr-only">
+                    {t("Phone Number *")}
+                  </label>
                   <input
+                    id="contact-phone"
+                    name="phone"
                     type="tel"
+                    required
+                    autoComplete="tel"
+                    value={formData.phone}
+                    onChange={handleChange}
                     placeholder={t("Phone Number *")}
-                    className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 focus:outline-none text-sm"
+                    className="w-full ps-10 pe-4 py-2.5 rounded-lg border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 focus:outline-none text-sm"
                   />
                 </div>
               </div>
@@ -207,46 +291,73 @@ export default function Contact() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div className="relative">
                   <Mail
-                    className="absolute left-3 top-3 text-gray-400"
+                    className="absolute start-3 top-3 text-gray-400"
                     size={18}
                   />
+                  <label htmlFor="contact-email" className="sr-only">
+                    {t("Email Address *")}
+                  </label>
                   <input
+                    id="contact-email"
+                    name="email"
                     type="email"
+                    required
+                    autoComplete="email"
+                    value={formData.email}
+                    onChange={handleChange}
                     placeholder={t("Email Address *")}
-                    className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 focus:outline-none text-sm"
+                    className="w-full ps-10 pe-4 py-2.5 rounded-lg border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 focus:outline-none text-sm"
                   />
                 </div>
                 <div className="relative">
                   <Home
-                    className="absolute left-3 top-3 text-gray-400"
+                    className="absolute start-3 top-3 text-gray-400"
                     size={18}
                   />
-                  <select className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 focus:outline-none text-sm appearance-none">
-                    <option>{t("Select Interest")}</option>
-                    <option>{t("Buy Property")}</option>
-                    <option>{t("Sell Property")}</option>
-                    <option>{t("Rent")}</option>
-                    <option>{t("Investment")}</option>
+                  <label htmlFor="contact-interest" className="sr-only">
+                    {t("Select Interest")}
+                  </label>
+                  <select
+                    id="contact-interest"
+                    name="interest"
+                    value={formData.interest}
+                    onChange={handleChange}
+                    className="w-full ps-10 pe-4 py-2.5 rounded-lg border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 focus:outline-none text-sm appearance-none"
+                  >
+                    <option value="">{t("Select Interest")}</option>
+                    <option value="buy">{t("Buy Property")}</option>
+                    <option value="sell">{t("Sell Property")}</option>
+                    <option value="rent">{t("Rent")}</option>
+                    <option value="investment">{t("Investment")}</option>
                   </select>
                 </div>
               </div>
 
               <div className="relative">
                 <FileText
-                  className="absolute left-3 top-3 text-gray-400"
+                  className="absolute start-3 top-3 text-gray-400"
                   size={18}
                 />
+                <label htmlFor="contact-message" className="sr-only">
+                  {t("Your Message *")}
+                </label>
                 <textarea
+                  id="contact-message"
+                  name="message"
+                  required
+                  value={formData.message}
+                  onChange={handleChange}
                   placeholder={t("Your Message *")}
-                  className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 focus:outline-none text-sm resize-none h-24"
+                  className="w-full ps-10 pe-4 py-2.5 rounded-lg border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 focus:outline-none text-sm resize-none h-24"
                 />
               </div>
 
               <button
                 type="submit"
-                className="w-full bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 font-semibold rounded-lg transition transform hover:scale-[1.02] shadow-md"
+                disabled={loading}
+                className="w-full bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 font-semibold rounded-lg transition transform hover:scale-[1.02] shadow-md disabled:cursor-not-allowed disabled:bg-orange-300"
               >
-                {t("Send Request")}
+                {loading ? t("Sending...") : t("Send Request")}
               </button>
             </form>
 

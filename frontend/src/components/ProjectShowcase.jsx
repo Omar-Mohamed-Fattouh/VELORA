@@ -3,11 +3,11 @@ import { ArrowUpRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 
-import house1 from "../assets/house1.jpg";
-import house2 from "../assets/house2.jpg";
-import house3 from "../assets/house3.jpg";
-import house4 from "../assets/house4.jpg";
-import house5 from "../assets/house5.jpg";
+import house1 from "../assets/house1.webp";
+import house2 from "../assets/house2.webp";
+import house3 from "../assets/house3.webp";
+import house4 from "../assets/house4.webp";
+import house5 from "../assets/house5.webp";
 
 export default function ProjectAreaTwo() {
   const { t } = useTranslation();

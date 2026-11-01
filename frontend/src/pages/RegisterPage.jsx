@@ -2,14 +2,16 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../context/AuthContext.jsx";
+import PageMeta from "../components/PageMeta.jsx";
 
 export default function RegisterPage() {
   const [form, setForm] = useState({ name: "", email: "", password: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { register } = useAuth();
   const navigate = useNavigate();
+  const isRTL = i18n.language === "ar";
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -20,14 +22,20 @@ export default function RegisterPage() {
       await register(form);
       navigate("/");
     } catch (err) {
-      setError(err.message || "Unable to create account.");
+      setError(err.message || t("auth.registerError"));
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-[70vh] bg-slate-50 flex items-center justify-center px-4 py-16">
+    <div className="min-h-[70vh] bg-slate-50 flex items-center justify-center px-4 py-16" dir={isRTL ? "rtl" : "ltr"}>
+      <PageMeta
+        title={t("seo.register.title")}
+        description={t("seo.register.description")}
+        path="/register"
+        noIndex
+      />
       <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
         <h1 className="text-3xl font-bold text-slate-900 mb-2">
           {t("auth.createAccount")}
@@ -42,11 +50,16 @@ export default function RegisterPage() {
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="mb-2 block text-sm font-medium text-slate-700">
+            <label
+              htmlFor="register-name"
+              className="mb-2 block text-sm font-medium text-slate-700"
+            >
               {t("auth.fullName")}
             </label>
             <input
+              id="register-name"
               type="text"
+              autoComplete="name"
               required
               value={form.name}
               onChange={(event) =>
@@ -57,11 +70,16 @@ export default function RegisterPage() {
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium text-slate-700">
+            <label
+              htmlFor="register-email"
+              className="mb-2 block text-sm font-medium text-slate-700"
+            >
               {t("auth.email")}
             </label>
             <input
+              id="register-email"
               type="email"
+              autoComplete="email"
               required
               value={form.email}
               onChange={(event) =>
@@ -72,11 +90,16 @@ export default function RegisterPage() {
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium text-slate-700">
+            <label
+              htmlFor="register-password"
+              className="mb-2 block text-sm font-medium text-slate-700"
+            >
               {t("auth.password")}
             </label>
             <input
+              id="register-password"
               type="password"
+              autoComplete="new-password"
               minLength={8}
               required
               value={form.password}

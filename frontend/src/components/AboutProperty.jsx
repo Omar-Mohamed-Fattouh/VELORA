@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Car, Waves, Wifi, Utensils } from "lucide-react";
-import heroHouse from "../assets/room.jpg";
+import heroHouse from "../assets/room.webp";
 import { useTranslation } from "react-i18next";
 import i18n from "../i18n";
 

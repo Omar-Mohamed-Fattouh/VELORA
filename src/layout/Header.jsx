@@ -78,7 +78,7 @@ export default function Header() {
         <div className={`container mx-auto flex items-center justify-between py-3 px-6 ${isRTL ? "flex-row-reverse" : ""}`}>
           <NavLink to="/" className={`flex items-center no-underline ${isRTL ? "flex-row-reverse" : ""}`}>
             <img src={logo} alt="Logo" className="w-14 h-14 object-contain" />
-            <span className={`${isRTL ? "mr-2" : "ml-2"} text-3xl font-bold text-gray-700`}>MSGA</span>
+            <span className={`${isRTL ? "mr-2" : "ml-2"} text-3xl font-bold text-gray-700`}>VELORA</span>
           </NavLink>
 
           <div className="hidden lg:flex items-center gap-10">
@@ -165,7 +165,7 @@ export default function Header() {
 
           <div className={`flex items-center border-b border-gray-700 py-6 px-6 ${isRTL ? "flex-row-reverse" : ""}`}>
             <img src={logo} alt="Logo" className="w-10 h-10 object-contain" />
-            <h1 className={`text-2xl font-bold text-white tracking-wide ${isRTL ? "mr-3" : "ml-3"}`}>MSGA</h1>
+            <h1 className={`text-2xl font-bold text-white tracking-wide ${isRTL ? "mr-3" : "ml-3"}`}>VELORA</h1>
           </div>
 
           <div className="flex-1 flex flex-col justify-between p-6 space-y-6 overflow-y-auto" dir={isRTL ? "rtl" : "ltr"}>

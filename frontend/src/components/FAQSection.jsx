@@ -4,7 +4,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { ChevronDown, Check } from "lucide-react";
-import img from "../assets/img3.jpg";
+import img from "../assets/img3.webp";
 
 export default function FAQSection() {
   const { t, i18n } = useTranslation();
@@ -48,9 +48,11 @@ export default function FAQSection() {
   };
 
   return (
-    <div
+    <section
+      id="faq"
       className="bg-gray-50 px-4 py-12 sm:px-6 lg:px-12"
       dir={isRTL ? "rtl" : "ltr"}
+      aria-labelledby="faq-heading"
     >
       <div className="container mx-auto">
         <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-start">
@@ -58,14 +60,17 @@ export default function FAQSection() {
           <div className="space-y-8">
             {/* Brand */}
             <div className="flex items-center gap-2">
-              <span className="text-orange-400 font-semibold text-base sm:text-lg">
+              <span className="text-orange-700 font-semibold text-base sm:text-lg">
                 {t("faq.label")}
               </span>
             </div>
 
             {/* Heading */}
             <div className="space-y-4">
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 leading-snug">
+              <h2
+                id="faq-heading"
+                className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 leading-snug"
+              >
                 {t("faq.heading")}
               </h2>
               <p className="text-gray-600 text-base sm:text-lg leading-relaxed">
@@ -79,6 +84,8 @@ export default function FAQSection() {
                 <img
                   src={img}
                   alt={t("faq.propertyImageAlt")}
+                  width={800}
+                  height={520}
                   loading="lazy"
                   decoding="async"
                   className="w-full h-48 sm:h-64 object-cover rounded-xl"
@@ -93,11 +100,11 @@ export default function FAQSection() {
                   </h3>
                   <div className="space-y-2">
                     <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-700">
-                      <Check className="w-4 h-4 text-green-500" />
+                      <Check className="w-4 h-4 text-orange-500" />
                       <span>{t("faq.cardItem1")}</span>
                     </div>
                     <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-700">
-                      <Check className="w-4 h-4 text-green-500" />
+                      <Check className="w-4 h-4 text-orange-500" />
                       <span>{t("faq.cardItem2")}</span>
                     </div>
                   </div>
@@ -128,7 +135,7 @@ export default function FAQSection() {
                       className={`rounded-full w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center font-bold text-sm sm:text-base
                       ${
                         expandedItem === item.id
-                          ? "bg-orange-500 text-white"
+                          ? "bg-orange-700 text-white"
                           : "bg-gray-200 text-gray-700"
                       }`}
                     >
@@ -190,6 +197,6 @@ export default function FAQSection() {
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 }

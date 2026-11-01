@@ -7,20 +7,18 @@ import "swiper/css";
 import "swiper/css/navigation";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 
-import team1 from "../assets/team3.jpg";
-import team2 from "../assets/team4.jpg";
-import team3 from "../assets/team1.jpg";
-import team4 from "../assets/team2.jpg";
+import team1 from "../assets/team3.webp";
+import team2 from "../assets/team4.webp";
+import team3 from "../assets/team1.webp";
+import team4 from "../assets/team2.webp";
+import { loc } from "../data/content.js";
+import { siteContact, socialLinks } from "../data/site.js";
 
 const TEAM = [
-  { id: 1, name: "Louis Coolidge", role: "Founder", img: team1 },
-  { id: 2, name: "Louis Coolidge", role: "Founder", img: team2 },
-  { id: 3, name: "Louis Coolidge", role: "Founder", img: team3 },
-  { id: 4, name: "Louis Coolidge", role: "Founder", img: team4 },
-  { id: 5, name: "Louis Coolidge", role: "Founder", img: team1 },
-  { id: 6, name: "Louis Coolidge", role: "Founder", img: team2 },
-  { id: 7, name: "Louis Coolidge", role: "Founder", img: team3 },
-  { id: 8, name: "Louis Coolidge", role: "Founder", img: team4 },
+  { id: 1, name: { en: "Layla Hassan", ar: "ليلى حسن" }, role: { en: "Founder", ar: "المؤسسة" }, img: team1 },
+  { id: 2, name: { en: "Omar Farid", ar: "عمر فريد" }, role: { en: "Sales Director", ar: "مدير المبيعات" }, img: team2 },
+  { id: 3, name: { en: "Nour El Deeb", ar: "نور الديب" }, role: { en: "Property Advisor", ar: "مستشارة عقارية" }, img: team3 },
+  { id: 4, name: { en: "Karim Shawky", ar: "كريم شوقي" }, role: { en: "Valuation Lead", ar: "مسؤول التقييم" }, img: team4 },
 ];
 
 export default function OurExpertAgents() {
@@ -93,7 +91,7 @@ export default function OurExpertAgents() {
                         <div className="relative w-full aspect-[3/4]">
                           <img
                             src={member.img}
-                            alt={member.name}
+                            alt={loc(member.name, i18n.language)}
                             loading="lazy"
                             decoding="async"
                             className={`absolute inset-0 w-full h-full object-cover z-10 transition-all duration-500
@@ -113,17 +111,22 @@ export default function OurExpertAgents() {
                                 : "-translate-y-1/2 opacity-0 invisible"
                             }`}
                         >
-                          {[FaFacebookF, FaTwitter, FaLinkedinIn, FaGoogle].map(
-                            (Icon, idx) => (
+                          {[
+                            { Icon: FaFacebookF, href: socialLinks.find((item) => item.id === "facebook")?.href },
+                            { Icon: FaTwitter, href: socialLinks.find((item) => item.id === "twitter")?.href },
+                            { Icon: FaLinkedinIn, href: socialLinks.find((item) => item.id === "linkedin")?.href },
+                            { Icon: FaGoogle, href: `mailto:${siteContact.email}` },
+                          ].map(({ Icon, href }, idx) => (
                               <a
                                 key={idx}
-                                href="#"
+                                href={href}
+                                target="_blank"
+                                rel="noopener noreferrer"
                                 className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white flex items-center justify-center shadow text-orange-500"
                               >
                                 <Icon />
                               </a>
-                            ),
-                          )}
+                            ))}
                         </div>
                       </div>
                     </div>
@@ -136,10 +139,10 @@ export default function OurExpertAgents() {
                           group-hover:bg-orange-500`}
                       >
                         <h4 className="text-lg sm:text-xl md:text-2xl font-semibold leading-tight">
-                          {t(member.name)}
+                          {loc(member.name, i18n.language)}
                         </h4>
                         <p className="text-sm sm:text-md opacity-90">
-                          {t(member.role)}
+                          {loc(member.role, i18n.language)}
                         </p>
                       </div>
 
@@ -155,7 +158,7 @@ export default function OurExpertAgents() {
                         type="button"
                         onClick={() => toggleCard(member.id)}
                         aria-expanded={isOpen}
-                        aria-label={`${isOpen ? "Hide" : "Show"} social links for ${t(member.name)}`}
+                        aria-label={`${isOpen ? "Hide" : "Show"} social links for ${loc(member.name, i18n.language)}`}
                         className={`absolute text-orange-500 ${
                           isRTL ? "left-3 sm:left-4" : "right-3 sm:right-4"
                         } top-1/2 transform -translate-y-1/2 z-20 w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-white flex items-center justify-center shadow-lg transition-transform duration-200`}

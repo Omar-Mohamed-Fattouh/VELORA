@@ -11,9 +11,9 @@ import { ChevronLeft, ChevronRight, ZoomIn } from "lucide-react";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 
-import img1 from "../assets/img1.jpg";
-import img2 from "../assets/img2.jpg";
-import img3 from "../assets/img3.jpg";
+import img1 from "../assets/img1.webp";
+import img2 from "../assets/img2.webp";
+import img3 from "../assets/img3.webp";
 
 export default function BestProjects() {
   const swiperRef = useRef(null);

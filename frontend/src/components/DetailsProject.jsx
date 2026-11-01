@@ -6,17 +6,19 @@ import "swiper/css/effect-fade";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
 
-import detail1 from "../assets/detail1.jpg";
-import detail2 from "../assets/detail2.jpg";
-import detail3 from "../assets/detail3.jpg";
-import detail4 from "../assets/detail4.jpg";
+import detail1 from "../assets/detail1.webp";
+import detail2 from "../assets/detail2.webp";
+import detail3 from "../assets/detail3.webp";
+import detail4 from "../assets/detail4.webp";
 
 import { Ruler, MapPin, Square } from "lucide-react";
 
-export default function DetailsProject() {
+export default function DetailsProject({ project }) {
   const { t, i18n } = useTranslation();
-  const isRTL = i18n.language === "ar"; // 🔥 check language
-  const images = [detail1, detail2, detail3, detail4];
+  const isRTL = i18n.language === "ar";
+  const images = [project?.image, detail1, detail2, detail3, detail4].filter(
+    (src, index, list) => src && list.indexOf(src) === index,
+  );
   const [activeIndex, setActiveIndex] = useState(0);
   const swiperRef = useRef(null);
 
@@ -129,7 +131,7 @@ useEffect(function(){
       >
         <div>
           <h2 className="text-3xl sm:text-4xl lg:text-6xl font-bold">
-            {t("Capital Avenue (Al Qirawan)")}
+            {project?.title || t("Capital Avenue (Al Qirawan)")}
           </h2>
           <div className="flex flex-col sm:flex-row gap-6 sm:gap-8 mt-6 sm:mt-10 text-lg sm:text-xl lg:text-2xl">
             <div className="flex items-center gap-2">
@@ -138,7 +140,9 @@ useEffect(function(){
                 <span className="text-xs sm:text-sm text-orange-500">
                   {t("Building Area")}
                 </span>
-                <span>{t("36,000")} {t("m²")}</span>
+                <span>
+                  {Number(project?.area || 36000).toLocaleString()} {t("m²")}
+                </span>
               </div>
             </div>
             <div className="flex items-center gap-2">
@@ -147,16 +151,18 @@ useEffect(function(){
                 <span className="text-xs sm:text-sm text-orange-500">
                   {t("Location")}
                 </span>
-                <span>{t("Riyadh - Al Qirawan")}</span>
+                <span>{project?.location || t("Riyadh - Al Qirawan")}</span>
               </div>
             </div>
             <div className="flex items-center gap-2">
               <Square size={22} className="text-orange-500" />
               <div className="flex flex-col leading-tight">
                 <span className="text-xs sm:text-sm text-orange-500">
-                  {t("Land Area")}
+                  {t("Price")}
                 </span>
-                <span>{t("7,728")}{t("m²")}</span>
+                <span>
+                  ${Number(project?.price || 875000).toLocaleString()}
+                </span>
               </div>
             </div>
           </div>

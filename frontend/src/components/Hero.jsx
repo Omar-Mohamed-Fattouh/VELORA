@@ -9,18 +9,51 @@ import { Autoplay, EffectFade } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/effect-fade";
 
-import img1 from "../assets/Hero1.jpg";
-import img2 from "../assets/Hero2.jpg";
-import img3 from "../assets/Hero3.jpg";
+import img2 from "../assets/Hero2.webp";
+import img3 from "../assets/Hero3.webp";
 import heroshapeBu from "../assets/heroshapeBu.png";
-import heroshapeSt from "../assets/heroshapeSt.png";
-import heroshapeWa from "../assets/heroshapeWa.png";
+import useReducedMotion from "../hooks/useReducedMotion";
+
+function OrangeStar({ className }) {
+  return (
+    <svg
+      viewBox="0 0 64 64"
+      className={className}
+      aria-hidden="true"
+      fill="#f97316"
+    >
+      <path d="M32 2 L38 26 L62 32 L38 38 L32 62 L26 38 L2 32 L26 26 Z" />
+    </svg>
+  );
+}
+
+function OrangeWave({ className }) {
+  return (
+    <svg
+      viewBox="0 0 220 40"
+      className={className}
+      aria-hidden="true"
+      fill="none"
+    >
+      <path
+        d="M4 28 C 40 4, 80 4, 110 20 S 180 40, 216 12"
+        stroke="#f97316"
+        strokeWidth="6"
+        strokeLinecap="round"
+        fill="none"
+      />
+    </svg>
+  );
+}
+
+const img1 = "/hero-lcp.webp";
 
 const SLIDE_INTERVAL = 5000;
 
 export function Hero() {
   const { t, i18n } = useTranslation();
   const isRTL = i18n.language === "ar";
+  const reduceMotion = useReducedMotion();
   const slides = [
     {
       id: 1,
@@ -100,8 +133,10 @@ export function Hero() {
       const swiper = swiperRef.current.swiper;
       const el = swiper.el;
 
-      const handleEnter = () => swiper.autoplay.stop();
-      const handleLeave = () => swiper.autoplay.start();
+      const handleEnter = () => swiper.autoplay?.stop?.();
+      const handleLeave = () => {
+        if (!reduceMotion) swiper.autoplay?.start?.();
+      };
 
       el.addEventListener("mouseenter", handleEnter);
       el.addEventListener("mouseleave", handleLeave);
@@ -111,7 +146,7 @@ export function Hero() {
         el.removeEventListener("mouseleave", handleLeave);
       };
     }
-  }, []);
+  }, [reduceMotion]);
 
   return (
     <section
@@ -123,7 +158,11 @@ export function Hero() {
         modules={[Autoplay, EffectFade]}
         effect="fade"
         fadeEffect={{ crossFade: true }}
-        autoplay={{ delay: SLIDE_INTERVAL, disableOnInteraction: false }}
+        autoplay={
+          reduceMotion
+            ? false
+            : { delay: SLIDE_INTERVAL, disableOnInteraction: false }
+        }
         loop
         key={isRTL ? "rtl" : "ltr"}
         dir={isRTL ? "rtl" : "ltr"}
@@ -147,17 +186,17 @@ export function Hero() {
                 >
                   <motion.img
                     src={heroshapeBu}
-                    alt="background shape"
+                    alt=""
+                    aria-hidden="true"
                     className={`absolute bottom-0 ${isRTL ? "right-0" : "left-0"} object-contain opacity-80`}
                     initial={{ x: -200, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
                     transition={{ duration: 1 }}
                   />
 
-                  <motion.img
-                    src={heroshapeSt}
-                    alt="star"
-                    className={`absolute ${isRTL ? "left-60" : "right-60"} top-20 w-25 h-25 z-10`}
+                  <motion.div
+                    className={`absolute ${isRTL ? "left-60" : "right-60"} top-20 z-10`}
+                    aria-hidden="true"
                     initial={{ opacity: 0, y: -50 }}
                     animate={{ y: [0, -20, 0], opacity: 1 }}
                     transition={{
@@ -165,12 +204,13 @@ export function Hero() {
                       repeat: Infinity,
                       ease: "easeInOut",
                     }}
-                  />
+                  >
+                    <OrangeStar className="h-16 w-16 sm:h-20 sm:w-20" />
+                  </motion.div>
 
-                  <motion.img
-                    src={heroshapeWa}
-                    alt="wave"
-                    className={`absolute ${isRTL ? "left-35" : "right-35"} top-55 w-40 h-10 z-10`}
+                  <motion.div
+                    className={`absolute ${isRTL ? "left-35" : "right-35"} top-55 z-10`}
+                    aria-hidden="true"
                     initial={{ opacity: 0, x: isRTL ? -50 : 50 }}
                     animate={{
                       x: isRTL ? [0, -20, 0] : [0, 20, 0],
@@ -181,7 +221,9 @@ export function Hero() {
                       repeat: Infinity,
                       ease: "easeInOut",
                     }}
-                  />
+                  >
+                    <OrangeWave className="h-10 w-40" />
+                  </motion.div>
 
                   <motion.div
                     className="relative z-20"
@@ -189,19 +231,19 @@ export function Hero() {
                     animate={{ x: 0, opacity: 1 }}
                     transition={{ duration: 0.8, delay: 0.2 }}
                   >
-                    <div className="inline-flex items-center text-xs sm:text-sm bg-white min-h-7 text-orange-500 font-medium px-3 md:px-5 py-1 rounded-full shadow">
+                    <div className="inline-flex items-center text-xs sm:text-sm bg-white min-h-7 text-orange-700 font-semibold px-3 md:px-5 py-1 rounded-full shadow">
                       {isRTL ? "←" : "→"} {s.subtitle}
                     </div>
                   </motion.div>
 
-                  <motion.h1
+                  <motion.div
                     className="relative z-20 text-3xl sm:text-4xl lg:text-5xl font-bold leading-snug"
                     initial={{ x: isRTL ? 100 : -100, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
                     transition={{ duration: 0.9, delay: 0.3 }}
                   >
-                    {s.title}
-                  </motion.h1>
+                    {s.id === 1 ? <h1>{s.title}</h1> : <p>{s.title}</p>}
+                  </motion.div>
 
                   <motion.p
                     className="relative z-20 text-base md:text-lg text-gray-300 leading-relaxed max-w-md"
@@ -241,8 +283,10 @@ export function Hero() {
                   <img
                     src={s.image}
                     alt={s.location}
+                    width={1600}
+                    height={1067}
                     loading={s.id === 1 ? "eager" : "lazy"}
-                    fetchpriority={s.id === 1 ? "high" : undefined}
+                    fetchPriority={s.id === 1 ? "high" : undefined}
                     decoding="async"
                     className="w-full h-full object-cover"
                   />
@@ -253,7 +297,7 @@ export function Hero() {
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ duration: 1, delay: 0.7 }}
                   >
-                    <div className="bg-orange-500 text-white py-3 px-4 shadow-lg flex items-center gap-3 border-2 border-white max-w-[min(82vw,22rem)]">
+                    <div className="bg-orange-700 text-white py-3 px-4 shadow-lg flex items-center gap-3 border-2 border-white max-w-[min(82vw,22rem)]">
                       <MapPin className="w-5 h-5 shrink-0" />
                       <span className="font-medium text-sm leading-snug">
                         {s.location}
@@ -267,8 +311,10 @@ export function Hero() {
                 <img
                   src={s.image}
                   alt={s.location}
+                  width={1600}
+                  height={1067}
                   loading={s.id === 1 ? "eager" : "lazy"}
-                  fetchpriority={s.id === 1 ? "high" : undefined}
+                  fetchPriority={s.id === 1 ? "high" : undefined}
                   decoding="async"
                   className="w-full h-full object-cover"
                 />
@@ -276,7 +322,7 @@ export function Hero() {
               </div>
 
               <div className="absolute bottom-16 inset-s-4 z-20 lg:hidden">
-                <div className="bg-orange-500 text-white py-2.5 px-3 shadow-lg flex items-center gap-2 border-2 border-white max-w-[min(82vw,22rem)]">
+                <div className="bg-orange-700 text-white py-2.5 px-3 shadow-lg flex items-center gap-2 border-2 border-white max-w-[min(82vw,22rem)]">
                   <MapPin className="w-5 h-5 shrink-0" />
                   <span className="font-medium text-xs sm:text-sm leading-snug">
                     {s.location}
@@ -293,10 +339,10 @@ export function Hero() {
           <button
             key={s.id}
             onClick={() => gotoSlide(i)}
-            aria-label={`Go to slide ${i + 1}`}
+            aria-label={String(i + 1).padStart(2, "0")}
             className={`w-8 h-8 md:w-10 md:h-10 lg:w-11 lg:h-11 rounded-full flex items-center justify-center text-base md:text-lg lg:text-xl font-semibold transition-colors duration-300 ${
               i === activeIndex
-                ? "bg-orange-500 text-white"
+                ? "bg-orange-700 text-white"
                 : "bg-white text-gray-900 hover:bg-gray-200"
             }`}
           >

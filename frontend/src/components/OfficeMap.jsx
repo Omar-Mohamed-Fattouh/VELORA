@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React, { memo, useState } from "react";
 import { motion } from "framer-motion";
 import { MapPin } from "lucide-react";
 import { useTranslation } from "react-i18next";
@@ -8,8 +8,12 @@ const subtitleVariants = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1,
 const mapVariants = { hidden: { opacity: 0, scale: 0.95 }, visible: { opacity: 1, scale: 1 } };
 const pinVariants = { hidden: { opacity: 0, scale: 0.5 }, visible: { opacity: 1, scale: 1 } };
 
+const MAP_SRC =
+  "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3418.4!2d32.271!3d30.5965!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14f8597d4e6c!2sIsmailia!5e0!3m2!1sen!2seg";
+
 function OfficeMap() {
   const { t } = useTranslation();
+  const [showMap, setShowMap] = useState(false);
 
   return (
     <section className="w-full bg-white pt-15 pb-12">
@@ -47,35 +51,51 @@ function OfficeMap() {
           transition={{ duration: 1 }}
           viewport={{ once: true }}
         >
-          <iframe
-            title="office-map"
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3155.434183181232!2d-122.08424968468145!3d37.42206597982486!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x808fb0a6c7c0f4b5%3A0xd6f9f6f00b5f5e43!2sGoogleplex!5e0!3m2!1sen!2sus!4v1633028185961!5m2!1sen!2sus"
-            className="w-full h-[420px] md:h-[520px] border-0"
-            allowFullScreen
-            loading="lazy"
-          />
-
-          <motion.div
-            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20"
-            variants={pinVariants}
-            initial="hidden"
-            whileInView="visible"
-            transition={{ delay: 0.4, duration: 0.6, type: "spring" }}
-            viewport={{ once: true }}
-          >
-            <div
-              className="flex items-center justify-center w-12 h-12 rounded-full bg-orange-500 ring-4 ring-white/80 shadow"
-              role="img"
-              aria-label="Office location"
+          {showMap ? (
+            <iframe
+              title={t("map.title")}
+              src={MAP_SRC}
+              className="w-full h-[420px] md:h-[520px] border-0"
+              allowFullScreen
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            />
+          ) : (
+            <button
+              type="button"
+              onClick={() => setShowMap(true)}
+              className="w-full h-[420px] md:h-[520px] bg-slate-100 flex flex-col items-center justify-center gap-4 text-slate-700"
             >
-              <MapPin className="w-6 h-6 text-white" />
-            </div>
-            <span className="sr-only">Viora Tech HQ</span>
-          </motion.div>
+              <span className="flex items-center justify-center w-12 h-12 rounded-full bg-orange-500 ring-4 ring-white/80 shadow">
+                <MapPin className="w-6 h-6 text-white" />
+              </span>
+              <span className="rounded-full bg-orange-500 px-5 py-2 text-sm font-semibold text-white">
+                {t("map.load")}
+              </span>
+            </button>
+          )}
+
+          {showMap ? (
+            <motion.div
+              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20 pointer-events-none"
+              variants={pinVariants}
+              initial="hidden"
+              animate="visible"
+              transition={{ delay: 0.4, duration: 0.6, type: "spring" }}
+            >
+              <div
+                className="flex items-center justify-center w-12 h-12 rounded-full bg-orange-500 ring-4 ring-white/80 shadow"
+                role="img"
+                aria-label={t("map.title")}
+              >
+                <MapPin className="w-6 h-6 text-white" />
+              </div>
+            </motion.div>
+          ) : null}
         </motion.div>
       </div>
     </section>
   );
 }
-
 export default memo(OfficeMap);
+

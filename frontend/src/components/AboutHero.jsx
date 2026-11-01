@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
-import about1 from "../assets/about1.jpg";
-import about2 from "../assets/about2.jpg";
+import about1 from "../assets/about1.webp";
+import about2 from "../assets/about2.webp";
 import about3 from "../assets/about3.png";
 import heroshapeB from "../assets/heroshapeB.png";
 

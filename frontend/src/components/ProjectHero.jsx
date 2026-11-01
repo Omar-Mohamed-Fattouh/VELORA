@@ -1,5 +1,5 @@
 import { ChevronRight } from "lucide-react";
-import heroHouse from "../assets/About.jpg";
+import heroHouse from "../assets/About.webp";
 import { NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 

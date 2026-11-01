@@ -1,4 +1,4 @@
-# MSGA Real Estate
+# VELORA Real Estate
 
 A bilingual real-estate website and API for browsing properties, viewing project details, and sending inquiries. The interface supports English and Arabic, including right-to-left layouts.
 

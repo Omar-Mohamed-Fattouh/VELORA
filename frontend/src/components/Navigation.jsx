@@ -44,10 +44,10 @@ export function Navigation() {
         <NavLink to="/" className="flex items-center no-underline">
           <img
             src={logo}
-            alt="MSGA Logo"
+            alt="VELORA Logo"
             className="w-14 h-14 object-contain"
           />
-          <span className="ml-2 text-3xl font-bold text-gray-900">MSGA</span>
+          <span className="ml-2 text-3xl font-bold text-gray-900">VELORA</span>
         </NavLink>
 
         {/* Center - Nav Links (only large screens) */}
@@ -168,11 +168,11 @@ export function Navigation() {
           <div className="flex items-center border-b border-gray-700 py-6 px-6 space-x-3">
             <img
               src={logo}
-              alt="MSGA Logo"
+              alt="VELORA Logo"
               className="w-10 h-10 object-contain"
             />
             <h1 className="text-2xl font-bold text-white tracking-wide">
-              MSGA
+              VELORA
             </h1>
           </div>
 

@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { MapPin, MapPinned, Video, DollarSign } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import apiRequest from "../services/api.js";
+import { localizeProperty } from "../data/propertyI18n.js";
 
 function formatPrice(value) {
   return Number(value || 0).toLocaleString();
@@ -44,7 +45,7 @@ function ProjectCard({ p }) {
                 ? "bg-orange-50 text-orange-600"
                 : p.status === "Sold"
                 ? "bg-gray-100 text-gray-700"
-                : "bg-yellow-50 text-yellow-800"
+                : "bg-orange-50 text-orange-700"
             }`}
           >
             {t(p.status)}
@@ -126,9 +127,12 @@ function ProjectCard({ p }) {
             >
               {t("Details")}
             </Link>
-            <button className="flex-1 px-3 py-2 border rounded-md border-orange-500 text-orange-500 text-lg font-medium hover:bg-orange-50 transition">
+            <Link
+              to="/contact"
+              className="flex-1 px-3 py-2 border rounded-md border-orange-500 text-orange-500 text-lg font-medium hover:bg-orange-50 transition text-center"
+            >
               {t("Consultation")}
-            </button>
+            </Link>
           </div>
         </div>
       </div>
@@ -146,7 +150,11 @@ export default function ProjectsPage() {
     const loadProjects = async () => {
       try {
         const data = await apiRequest("/properties");
-        setProjects(data.data?.items || []);
+        setProjects(
+          (data.data?.items || []).map((item) =>
+            localizeProperty(item, i18n.language),
+          ),
+        );
       } catch (error) {
         console.error(error);
         setProjects([]);
@@ -156,7 +164,7 @@ export default function ProjectsPage() {
     };
 
     loadProjects();
-  }, []);
+  }, [i18n.language]);
 
   const locationOptions = useMemo(
     () => [
@@ -182,9 +190,9 @@ export default function ProjectsPage() {
   const priceOptions = useMemo(
     () => [
       { value: "all", label: t("All prices") },
-      { value: "low", label: t("Under 10,000") },
-      { value: "medium", label: t("10,000 - 25,000") },
-      { value: "high", label: t("Over 25,000") },
+      { value: "low", label: t("Under 600,000") },
+      { value: "medium", label: t("600,000 - 1,200,000") },
+      { value: "high", label: t("Over 1,200,000") },
     ],
     [t]
   );
@@ -192,9 +200,9 @@ export default function ProjectsPage() {
   const areaOptions = useMemo(
     () => [
       { value: "all", label: t("All areas") },
-      { value: "small", label: t("Under 100 m²") },
-      { value: "medium", label: t("100 - 300 m²") },
-      { value: "large", label: t("Over 300 m²") },
+      { value: "small", label: t("Under 15,000 m²") },
+      { value: "medium", label: t("15,000 - 30,000 m²") },
+      { value: "large", label: t("Over 30,000 m²") },
     ],
     [t]
   );
@@ -216,16 +224,16 @@ export default function ProjectsPage() {
       if (loc?.value !== "all" && p.location !== loc.value) return false;
       if (status?.value !== "all" && p.status !== status.value) return false;
       if (price?.value !== "all") {
-        if (price.value === "low" && p.price >= 10000) return false;
-        if (price.value === "medium" && (p.price < 10000 || p.price > 25000))
+        if (price.value === "low" && p.price >= 600000) return false;
+        if (price.value === "medium" && (p.price < 600000 || p.price > 1200000))
           return false;
-        if (price.value === "high" && p.price <= 25000) return false;
+        if (price.value === "high" && p.price <= 1200000) return false;
       }
       if (area?.value !== "all") {
-        if (area.value === "small" && p.area >= 100) return false;
-        if (area.value === "medium" && (p.area < 100 || p.area > 300))
+        if (area.value === "small" && p.area >= 15000) return false;
+        if (area.value === "medium" && (p.area < 15000 || p.area > 30000))
           return false;
-        if (area.value === "large" && p.area <= 300) return false;
+        if (area.value === "large" && p.area <= 30000) return false;
       }
       if (
         query &&
@@ -241,7 +249,7 @@ export default function ProjectsPage() {
   }, [loc, status, price, area, query, projects, t]);
 
   if (loading) {
-    return <section className="px-4 py-12 text-center text-slate-600">Loading projects...</section>;
+    return <section className="px-4 py-12 text-center text-slate-600">{t("a11y.loading")}</section>;
   }
 
   return (

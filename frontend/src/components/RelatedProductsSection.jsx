@@ -1,70 +1,22 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { MapPin, MapPinned, Video, DollarSign } from "lucide-react";
 import { useTranslation } from "react-i18next";
-
-import product1 from "../assets/img1.jpg";
-import product2 from "../assets/img2.jpg";
-import product3 from "../assets/img3.jpg";
-import product4 from "../assets/img1.jpg";
-
-const RELATED_PRODUCTS = [
-  {
-    id: 1,
-    img: product1,
-    title: "Modern Sofa",
-    location: "New York",
-    price: 1200,
-    area: 20,
-    status: "Available",
-    short: "A comfortable modern sofa for your living room.",
-  },
-  {
-    id: 2,
-    img: product2,
-    title: "Luxury Chair",
-    location: "Paris",
-    price: 800,
-    area: 10,
-    status: "Available",
-    short: "Elegant chair with high-quality materials.",
-  },
-  {
-    id: 3,
-    img: product3,
-    title: "Wooden Table",
-    location: "London",
-    price: 1500,
-    area: 15,
-    status: "Sold",
-    short: "Durable wooden table perfect for dining rooms.",
-  },
-  {
-    id: 4,
-    img: product4,
-    title: "Garden Set",
-    location: "Dubai",
-    price: 2000,
-    area: 30,
-    status: "Available",
-    short: "Outdoor garden furniture set for relaxing moments.",
-  },
-];
+import apiRequest from "../services/api.js";
+import { localizeProperty } from "../data/propertyI18n.js";
 
 function RelatedProductCard({ p }) {
   const { t } = useTranslation();
   return (
-<motion.article
-  layout
-  whileHover={{ scale: 1 }}
-  className="relative overflow-hidden bg-white flex flex-col h-full p-2 rounded-2xl group"
->
-
-      {/* Image */}
+    <motion.article
+      layout
+      whileHover={{ scale: 1 }}
+      className="relative overflow-hidden bg-white flex flex-col h-full p-2 rounded-2xl group"
+    >
       <div className="w-full relative h-70 z-20">
         <img
-          src={p.img}
+          src={p.image || p.img}
           alt={p.title}
           className="w-full rounded-2xl h-full p-2 object-cover"
         />
@@ -74,8 +26,8 @@ function RelatedProductCard({ p }) {
               p.status === "Available"
                 ? "bg-orange-50 text-orange-600"
                 : p.status === "Sold"
-                ? "bg-gray-100 text-gray-700"
-                : "bg-yellow-50 text-yellow-800"
+                  ? "bg-gray-100 text-gray-700"
+                  : "bg-orange-50 text-orange-700"
             }`}
           >
             {t(p.status)}
@@ -83,7 +35,6 @@ function RelatedProductCard({ p }) {
         </div>
       </div>
 
-      {/* Overlay effect */}
       <div className="z-10 p-2.5">
         <motion.div
           className="absolute inset-0 h-[35%] rounded-xl transform
@@ -91,13 +42,12 @@ function RelatedProductCard({ p }) {
              -z-10 bg-orange-500 bg-opacity-80 transition duration-700 ease-in-out"
         />
 
-        {/* Card content */}
-     <div className=" flex flex-col flex-1 rounded-2xl group-hover:bg-gray-900 transition duration-700">
+        <div className=" flex flex-col flex-1 rounded-2xl group-hover:bg-gray-900 transition duration-700">
           <div className="flex justify-between items-center mb-2 p-3   rounded-b-2xl bg-orange-500 group-hover:bg-gray-900 transition duration-800">
             <div className="flex items-center gap-2">
               <MapPin size={25} className="text-white" />
               <span className="text-2xl font-semibold text-white">
-                {t(p.location)}
+                {p.location}
               </span>
             </div>
             <div className="flex divide-gray-200  items-center gap-3 sm:flex-col xl:flex-row">
@@ -132,24 +82,24 @@ function RelatedProductCard({ p }) {
           </div>
           <div className="mx-4">
             <h3 className="text-gray-900 transition duration-700  group-hover:text-white font-bold text-2xl">
-              {t(p.title)}
+              {p.title}
             </h3>
             <div className="flex justify-between gap-2  text-lg font-bold text-gray-700 group-hover:text-white transition duration-700 flex-1">
               <div className="flex items-center gap-4">
                 <div className="flex items-center ">
                   <span className=" text-gray-700 group-hover:text-white transition duration-700">
-                    {t(p.price.toLocaleString())}
+                    {Number(p.price || 0).toLocaleString()}
                   </span>
                   <DollarSign size={20} className=" text-orange-500 " />
                 </div>
                 <div className="flex items-center gap-2">
-                  {t(p.area)} {t("m²")}
+                  {Number(p.area || 0).toLocaleString()} {t("m²")}
                 </div>
               </div>
             </div>
 
             <p className="text-gray-700  group-hover:text-white transition duration-700 text-sm  mb-2 ">
-              {t(p.short)}
+              {p.short}
             </p>
           </div>
 
@@ -160,9 +110,12 @@ function RelatedProductCard({ p }) {
             >
               {t("Details")}
             </Link>
-            <button className="flex-1 px-3 py-2 border rounded-md border-orange-500 text-orange-500 text-lg font-medium hover:bg-orange-50 transition">
+            <Link
+              to="/contact"
+              className="flex-1 px-3 py-2 border rounded-md border-orange-500 text-orange-500 text-lg font-medium hover:bg-orange-50 transition text-center"
+            >
               {t("Consultation")}
-            </button>
+            </Link>
           </div>
         </div>
       </div>
@@ -172,7 +125,28 @@ function RelatedProductCard({ p }) {
 
 export default function RelatedProductsSection() {
   const { t, i18n } = useTranslation();
+  const { id } = useParams();
   const isRTL = i18n.language === "ar";
+  const [items, setItems] = useState([]);
+
+  useEffect(() => {
+    const loadRelated = async () => {
+      try {
+        const data = await apiRequest("/properties");
+        const list = (data.data?.items || [])
+          .filter((item) => String(item.id) !== String(id))
+          .map((item) => localizeProperty(item, i18n.language))
+          .slice(0, 3);
+        setItems(list);
+      } catch {
+        setItems([]);
+      }
+    };
+
+    loadRelated();
+  }, [id, i18n.language]);
+
+  if (items.length === 0) return null;
 
   return (
     <section
@@ -190,12 +164,11 @@ export default function RelatedProductsSection() {
         </p>
       </div>
 
-<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
-  {RELATED_PRODUCTS.slice(0, 3).map((p) => (
-    <RelatedProductCard key={p.id} p={p} />
-  ))}
-</div>
-
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
+        {items.map((p) => (
+          <RelatedProductCard key={p.id} p={p} />
+        ))}
+      </div>
     </section>
   );
 }

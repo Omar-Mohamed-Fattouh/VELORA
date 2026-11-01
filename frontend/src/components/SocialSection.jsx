@@ -8,14 +8,60 @@ import {
   MessageCircle,
   MapPin,
 } from "lucide-react";
+import { siteContact, socialLinks } from "../data/site.js";
+
+const socialHref = (id) =>
+  socialLinks.find((item) => item.id === id)?.href || "#";
 
 export default function ContactSection() {
   const { t } = useTranslation();
 
+  const cards = [
+    {
+      href: `mailto:${siteContact.email}`,
+      icon: Mail,
+      title: t("social.email"),
+      text: siteContact.email,
+    },
+    {
+      href: siteContact.phoneHref,
+      icon: Phone,
+      title: t("social.phone"),
+      text: siteContact.phone,
+    },
+    {
+      href: siteContact.whatsapp,
+      icon: MessageCircle,
+      title: t("social.whatsapp"),
+      text: siteContact.phone,
+      external: true,
+    },
+    {
+      href: socialHref("linkedin"),
+      icon: Linkedin,
+      title: t("social.linkedin"),
+      text: "VELORA",
+      external: true,
+    },
+    {
+      href: socialHref("facebook"),
+      icon: Facebook,
+      title: t("social.facebook"),
+      text: "VELORA",
+      external: true,
+    },
+    {
+      href: socialHref("instagram"),
+      icon: Instagram,
+      title: t("social.instagram"),
+      text: "@velora",
+      external: true,
+    },
+  ];
+
   return (
     <section className="w-full py-20 bg-gradient-to-b from-orange-50 via-white to-white">
       <div className="container mx-auto px-6">
-        {/* Heading */}
         <div className="text-center mb-14">
           <h2 className="text-4xl font-extrabold text-gray-900">
             {t("social.connectTitleStart")}{" "}
@@ -28,91 +74,28 @@ export default function ContactSection() {
           </p>
         </div>
 
-        {/* Grid */}
         <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-7">
-          {/* Email */}
-          <a
-            href="mailto:example@gmail.com"
-            className="group flex flex-col items-center text-center gap-3 p-6 rounded-2xl bg-white shadow-md hover:shadow-xl hover:-translate-y-1 transition"
-          >
-            <Mail className="w-8 h-8 text-orange-500" />
-            <h3 className="text-gray-900 font-semibold group-hover:text-orange-500 transition">
-              {t("social.email")}
-            </h3>
-            <p className="text-gray-600 text-sm">example@gmail.com</p>
-          </a>
+          {cards.map((card) => {
+            const Icon = card.icon;
+            return (
+              <a
+                key={card.title}
+                href={card.href}
+                target={card.external ? "_blank" : undefined}
+                rel={card.external ? "noopener noreferrer" : undefined}
+                className="group flex flex-col items-center text-center gap-3 p-6 rounded-2xl bg-white shadow-md hover:shadow-xl hover:-translate-y-1 transition"
+              >
+                <Icon className="w-8 h-8 text-orange-500" />
+                <h3 className="text-gray-900 font-semibold group-hover:text-orange-500 transition">
+                  {card.title}
+                </h3>
+                <p className="text-gray-600 text-sm">{card.text}</p>
+              </a>
+            );
+          })}
 
-          {/* Phone */}
-          <a
-            href="tel:+201234567890"
-            className="group flex flex-col items-center text-center gap-3 p-6 rounded-2xl bg-white shadow-md hover:shadow-xl hover:-translate-y-1 transition"
-          >
-            <Phone className="w-8 h-8 text-yellow-500" />
-            <h3 className="text-gray-900 font-semibold group-hover:text-orange-500 transition">
-              {t("social.phone")}
-            </h3>
-            <p className="text-gray-600 text-sm">+20 123 456 7890</p>
-          </a>
-
-          {/* WhatsApp */}
-          <a
-            href="https://wa.me/201234567890"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group flex flex-col items-center text-center gap-3 p-6 rounded-2xl bg-white shadow-md hover:shadow-xl hover:-translate-y-1 transition"
-          >
-            <MessageCircle className="w-8 h-8 text-green-500" />
-            <h3 className="text-gray-900 font-semibold group-hover:text-orange-500 transition">
-              {t("social.whatsapp")}
-            </h3>
-            <p className="text-gray-600 text-sm">+20 123 456 7890</p>
-          </a>
-
-          {/* LinkedIn */}
-          <a
-            href="https://linkedin.com/in/yourname"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group flex flex-col items-center text-center gap-3 p-6 rounded-2xl bg-white shadow-md hover:shadow-xl hover:-translate-y-1 transition"
-          >
-            <Linkedin className="w-8 h-8 text-sky-600" />
-            <h3 className="text-gray-900 font-semibold group-hover:text-orange-500 transition">
-              {t("social.linkedin")}
-            </h3>
-            <p className="text-gray-600 text-sm">/in/yourname</p>
-          </a>
-
-          {/* Facebook */}
-          <a
-            href="https://facebook.com/yourpage"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group flex flex-col items-center text-center gap-3 p-6 rounded-2xl bg-white shadow-md hover:shadow-xl hover:-translate-y-1 transition"
-          >
-            <Facebook className="w-8 h-8 text-blue-600" />
-            <h3 className="text-gray-900 font-semibold group-hover:text-orange-500 transition">
-              {t("social.facebook")}
-            </h3>
-            <p className="text-gray-600 text-sm">/YourPage</p>
-          </a>
-
-          {/* Instagram */}
-          <a
-            href="https://instagram.com/yourprofile"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group flex flex-col items-center text-center gap-3 p-6 rounded-2xl bg-white shadow-md hover:shadow-xl hover:-translate-y-1 transition"
-          >
-            <Instagram className="w-8 h-8 text-pink-500" />
-            <h3 className="text-gray-900 font-semibold group-hover:text-orange-500 transition">
-              {t("social.instagram")}
-            </h3>
-            <p className="text-gray-600 text-sm">@yourprofile</p>
-          </a>
-
-          {/* Location */}
           <div className="flex flex-col items-center text-center gap-3 p-6 rounded-2xl bg-white shadow-md">
-            <MapPin className="w-8 h-8 text-red-500" />
+            <MapPin className="w-8 h-8 text-orange-500" />
             <h3 className="text-gray-900 font-semibold">
               {t("social.location")}
             </h3>

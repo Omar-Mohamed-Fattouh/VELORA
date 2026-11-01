@@ -1,4 +1,5 @@
 import { ChevronLeft, ChevronRight, MoveRight } from "lucide-react";
+import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
@@ -6,77 +7,12 @@ import "swiper/css";
 import "swiper/css/navigation";
 
 import heroshapeBu from "../assets/heroshapeBu.png";
+import { apartments, loc } from "../data/content.js";
 
 export default function CityHouse() {
   const { t, i18n } = useTranslation();
   const isRTL = i18n.language === "ar";
-
-  const houses = [
-    {
-      id: 1,
-      titleKey: "cityhouse.house1",
-      img: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=600&h=700&q=80",
-      rooms: 25,
-      size: "2505",
-      beds: 2,
-    },
-    {
-      id: 2,
-      titleKey: "cityhouse.house2",
-      img: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=600&h=700&q=80",
-      rooms: 25,
-      size: "2505",
-      beds: 2,
-    },
-    {
-      id: 3,
-      titleKey: "cityhouse.house3",
-      img: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=600&h=700&q=80",
-      rooms: 25,
-      size: "2505",
-      beds: 2,
-    },
-    {
-      id: 4,
-      titleKey: "cityhouse.house4",
-      img: "https://images.unsplash.com/photo-1574362848149-11496d93a7c7?auto=format&fit=crop&w=600&h=700&q=80",
-      rooms: 25,
-      size: "2505",
-      beds: 2,
-    },
-    {
-      id: 5,
-      titleKey: "cityhouse.house5",
-      img: "https://images.unsplash.com/photo-1613977257363-707ba9348227?auto=format&fit=crop&w=600&h=700&q=80",
-      rooms: 25,
-      size: "2505",
-      beds: 2,
-    },
-    {
-      id: 6,
-      titleKey: "cityhouse.house6",
-      img: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=600&h=700&q=80",
-      rooms: 25,
-      size: "2505",
-      beds: 2,
-    },
-    {
-      id: 7,
-      titleKey: "cityhouse.house7",
-      img: "https://images.unsplash.com/photo-1605146769289-440113cc3d00?auto=format&fit=crop&w=600&h=700&q=80",
-      rooms: 25,
-      size: "2505",
-      beds: 2,
-    },
-    {
-      id: 8,
-      titleKey: "cityhouse.house8",
-      img: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=600&h=700&q=80",
-      rooms: 25,
-      size: "2505",
-      beds: 2,
-    },
-  ];
+  const houses = apartments.slice(0, 8);
 
   return (
     <div
@@ -88,7 +24,7 @@ export default function CityHouse() {
           className={`flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-6`}
         >
           <div className={isRTL ? "text-right" : "text-left"}>
-            <div className="flex items-center text-orange-400 text-sm font-semibold tracking-wider">
+            <div className="flex items-center text-orange-700 text-sm font-semibold tracking-wider">
               <MoveRight
                 className={`w-6 h-6 ${isRTL ? "ml-2 rotate-180" : "mr-2"}`}
               />
@@ -141,8 +77,10 @@ export default function CityHouse() {
             <SwiperSlide key={house.id}>
               <div className="relative h-[320px] md:h-[350px] overflow-hidden shadow-lg group cursor-pointer">
                 <img
-                  src={house.img}
-                  alt={t(house.titleKey)}
+                  src={house.image}
+                  alt={loc(house.title, i18n.language)}
+                  width={600}
+                  height={700}
                   loading="lazy"
                   decoding="async"
                   className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
@@ -161,14 +99,16 @@ export default function CityHouse() {
                   />
                 </div>
 
-                <button
+                <Link
+                  to="/apartments"
+                  aria-label={`${t("cityhouse.view")} ${loc(house.title, i18n.language)}`}
                   className={`absolute top-4 ${isRTL ? "left-4" : "right-4"} w-14 h-14 rounded-full bg-orange-500 text-white font-bold shadow-lg flex items-center justify-center opacity-0 scale-0 group-hover:opacity-100 group-hover:scale-100 transition-all duration-500 text-sm`}
                 >
                   {t("cityhouse.view")}
-                </button>
+                </Link>
 
                 <span
-                  className={`absolute bottom-24 ${isRTL ? "right-5" : "left-5"} bg-orange-500 group-hover:opacity-[90%] text-white px-2 py-1 text-xs sm:text-sm border-2 border-b-0 group-hover:rounded-t-md transition-all duration-900 z-0`}
+                  className={`absolute bottom-24 ${isRTL ? "right-5" : "left-5"} bg-orange-700 group-hover:opacity-[90%] text-white px-2 py-1 text-xs sm:text-sm border-2 border-b-0 group-hover:rounded-t-md transition-all duration-900 z-0`}
                 >
                   {String(house.id).padStart(2, "0")}
                 </span>
@@ -177,16 +117,16 @@ export default function CityHouse() {
                   className={`absolute bottom-0 inset-s-0 inset-e-0 p-3 sm:p-4 z-20 text-white bg-gray-900/70 group-hover:bg-inherit transition-all duration-700 ${isRTL ? "text-right" : "text-left"}`}
                 >
                   <h3 className="mt-1 min-w-0 break-words font-semibold text-base sm:text-lg">
-                    {t(house.titleKey)}
+                    {loc(house.title, i18n.language)}
                   </h3>
                   <div
                     className={`flex flex-wrap gap-y-1 text-xs sm:text-sm mt-1 sm:mt-2 opacity-90 divide-x-2 divide-gray-200 ${isRTL ? "divide-x-reverse" : ""}`}
                   >
                     <span className="px-2">
-                      {house.rooms} {t("cityhouse.room")}
+                      {house.baths} {t("cityhouse.room")}
                     </span>
                     <span className="px-2">
-                      {house.size} {t("cityhouse.sqUnit")}
+                      {house.area} {t("cityhouse.sqUnit")}
                     </span>
                     <span className="px-2">
                       {house.beds}x {t("cityhouse.bed")}

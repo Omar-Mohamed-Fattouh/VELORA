@@ -4,39 +4,22 @@ import { useState } from "react";
 // eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 import { User, MessageCircle, Plus, ChevronRight } from "lucide-react";
-import Article1 from "../assets/Article.jpg";
-import Article2 from "../assets/Article2.jpg";
-import Article3 from "../assets/Article3.jpg";
+import { blogPosts as allPosts, loc } from "../data/content.js";
 
 export default function Article() {
   const { t, i18n } = useTranslation();
   const isRTL = i18n.language === "ar";
   const [hoveredCard, setHoveredCard] = useState(null);
 
-  const blogPosts = [
-    {
-      id: 1,
-      title: t("article.post1Title"),
-      image: Article1,
-      author: t("article.author"),
-      comments: 3,
-    },
-    {
-      id: 2,
-      title: t("article.post2Title"),
-      image: Article2,
-      author: t("article.author"),
-      comments: 3,
-    },
-    {
-      id: 3,
-      title: t("article.post3Title"),
-      image: Article3,
-      author: t("article.author"),
-      comments: 3,
-    },
-  ];
+  const blogPosts = allPosts.slice(0, 3).map((post) => ({
+    id: post.id,
+    title: loc(post.title, i18n.language),
+    image: post.image,
+    author: t("article.author"),
+    comments: post.comments,
+  }));
 
   return (
     <section
@@ -48,7 +31,7 @@ export default function Article() {
         <div className="text-center mb-12">
           <div className="flex items-center justify-center gap-4 mb-4">
             <div className="h-px bg-orange-400 w-12"></div>
-            <span className="text-orange-400 text-sm font-medium tracking-wider">
+            <span className="text-orange-700 text-sm font-medium tracking-wider">
               {t("article.label")}
             </span>
             <div className="h-px bg-orange-400 w-12"></div>
@@ -169,16 +152,15 @@ export default function Article() {
                           exit={{ opacity: 0, y: 20 }}
                           transition={{ duration: 0.3, delay: 0.1 }}
                         >
-                          <motion.button
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 text-sm font-medium flex items-center gap-2 transition-colors"
+                          <Link
+                            to={`/blog/${post.id}`}
+                            className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 text-sm font-medium inline-flex items-center gap-2 transition-colors"
                           >
                             <span>{t("article.readMore")}</span>
                             <ChevronRight
                               className={`w-4 h-4 ${isRTL ? "rotate-180" : ""}`}
                             />
-                          </motion.button>
+                          </Link>
                         </motion.div>
                       )}
                     </AnimatePresence>

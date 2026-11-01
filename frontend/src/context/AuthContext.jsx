@@ -10,9 +10,9 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     const restoreSession = async () => {
       try {
-        const result = await apiRequest('/auth/me');
+        const result = await apiRequest('/auth/me', { timeout: 2500 });
         setUser(result.data?.user || null);
-      } catch (error) {
+      } catch {
         setUser(null);
       } finally {
         setLoading(false);

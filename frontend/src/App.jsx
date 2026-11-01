@@ -1,9 +1,11 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { Suspense, lazy, useEffect } from "react";
-import { useTranslation } from "react-i18next";
 import Header from "./layout/Header";
 import Footer from "./components/Footer";
 import Loader from "./components/Loader";
+import SkipToContent from "./components/SkipToContent.jsx";
+import ScrollToTop from "./components/ScrollToTop.jsx";
+import ErrorBoundary from "./components/ErrorBoundary.jsx";
 import { useAuth } from "./context/AuthContext.jsx";
 import i18n from "./i18n";
 
@@ -16,7 +18,12 @@ const LoginPage = lazy(() => import("./pages/LoginPage"));
 const RegisterPage = lazy(() => import("./pages/RegisterPage"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 const NotFound = lazy(() => import("./pages/NotFound"));
-const GenericPage = lazy(() => import("./pages/GenericPage"));
+const Privacy = lazy(() => import("./pages/Privacy"));
+const Apartments = lazy(() => import("./pages/Apartments"));
+const Blog = lazy(() => import("./pages/Blog"));
+const BlogPost = lazy(() => import("./pages/BlogPost"));
+const Services = lazy(() => import("./pages/Services"));
+const Help = lazy(() => import("./pages/Help"));
 
 function ProtectedRoute({ children, adminOnly = false }) {
   const { user, loading } = useAuth();
@@ -37,70 +44,44 @@ function ProtectedRoute({ children, adminOnly = false }) {
 }
 
 function MainLayout() {
-  const { t } = useTranslation();
-
+  const location = useLocation();
   return (
     <>
+      <SkipToContent />
+      <ScrollToTop />
       <Header />
-      <Suspense fallback={<Loader />}>
-        <main>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/projects" element={<Projects />} />
-            <Route path="/projects/:id" element={<ProjectDetails />} />
-            <Route path="/project-details/:id" element={<ProjectDetails />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
-            <Route
-              path="/apartments"
-              element={
-                <GenericPage
-                  title={t("page.apartments.title")}
-                  description={t("page.apartments.description")}
-                />
-              }
-            />
-            <Route
-              path="/page"
-              element={
-                <GenericPage
-                  title={t("page.page.title")}
-                  description={t("page.page.description")}
-                />
-              }
-            />
-            <Route
-              path="/blog"
-              element={
-                <GenericPage
-                  title={t("page.blog.title")}
-                  description={t("page.blog.description")}
-                />
-              }
-            />
-            <Route
-              path="/help"
-              element={
-                <GenericPage
-                  title={t("page.help.title")}
-                  description={t("page.help.description")}
-                />
-              }
-            />
-            <Route
-              path="/admin"
-              element={
-                <ProtectedRoute adminOnly>
-                  <AdminDashboard />
-                </ProtectedRoute>
-              }
-            />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </main>
-      </Suspense>
+      <ErrorBoundary key={location.pathname}>
+        <Suspense fallback={<Loader />}>
+          <main id="main-content" tabIndex={-1}>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/projects" element={<Projects />} />
+              <Route path="/projects/:id" element={<ProjectDetails />} />
+              <Route path="/project-details/:id" element={<ProjectDetails />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/register" element={<RegisterPage />} />
+              <Route path="/privacy" element={<Privacy />} />
+              <Route path="/apartments" element={<Apartments />} />
+              <Route path="/services" element={<Services />} />
+              <Route path="/page" element={<Services />} />
+              <Route path="/blog" element={<Blog />} />
+              <Route path="/blog/:id" element={<BlogPost />} />
+              <Route path="/help" element={<Help />} />
+              <Route
+                path="/admin"
+                element={
+                  <ProtectedRoute adminOnly>
+                    <AdminDashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </main>
+        </Suspense>
+      </ErrorBoundary>
       <Footer />
     </>
   );
@@ -108,7 +89,9 @@ function MainLayout() {
 
 export default function App() {
   useEffect(() => {
-    const syncLanguageDirection = (lang = i18n.language || localStorage.getItem("language") || "en") => {
+    const syncLanguageDirection = (
+      lang = i18n.language || localStorage.getItem("language") || "en",
+    ) => {
       const normalizedLang = lang.startsWith("ar") ? "ar" : "en";
       document.documentElement.lang = normalizedLang;
       document.documentElement.dir = normalizedLang === "ar" ? "rtl" : "ltr";
