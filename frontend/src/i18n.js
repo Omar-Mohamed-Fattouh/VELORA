@@ -31,8 +31,11 @@ const resources = {
       "page.help.description":
         "Need support? Contact our team for guidance on buying, selling, or investing in property.",
       "header.openingHours": "Opening hours",
+      "header.openingHoursShort": "9:00 – 18:00",
       "header.login": "Login",
+      "header.loginCompact": "Login",
       "header.register": "Register",
+      "header.registerCompact": "Register",
       "header.help": "Help You",
       "headerTop.openingHoursLabel": "Opening hours:",
       "headerTop.openingHoursValue": "Mon - Sat 9:00 am to 6:00 pm",
@@ -440,8 +443,11 @@ const resources = {
       "page.help.description":
         "هل تحتاج إلى دعم؟ تواصل مع فريقنا للحصول على إرشادات حول شراء أو بيع أو استثمار العقارات.",
       "header.openingHours": "ساعات العمل",
+      "header.openingHoursShort": "٩:٠٠ – ١٨:٠٠",
       "header.login": "تسجيل الدخول",
+      "header.loginCompact": "دخول",
       "header.register": "إنشاء حساب",
+      "header.registerCompact": "حساب",
       "header.help": "ساعدك",
       "headerTop.openingHoursLabel": "ساعات العمل:",
       "headerTop.openingHoursValue":

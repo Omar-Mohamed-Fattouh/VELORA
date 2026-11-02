@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import {
@@ -29,6 +29,7 @@ export default function Header() {
   const { t, i18n: i18nInstance } = useTranslation();
   const isRTL = i18nInstance.language === "ar";
   const { user, logout } = useAuth();
+  const location = useLocation();
 
   const handleSubscribe = async (event) => {
     event.preventDefault();
@@ -55,6 +56,11 @@ export default function Header() {
   ];
 
   useEffect(() => {
+    setMobileOpen(false);
+    setSidebarOpen(false);
+  }, [location.pathname]);
+
+  useEffect(() => {
     if (mobileOpen || sidebarOpen) {
       document.body.classList.add("overflow-hidden");
     } else {
@@ -62,62 +68,65 @@ export default function Header() {
     }
   }, [mobileOpen, sidebarOpen]);
 
-  return (
-    <header className="relative z-[900]" dir={isRTL ? "rtl" : "ltr"}>
-      {/* Top bar — opening hours, login/register/help, social icons */}
-      <div className="hidden xl:flex items-center bg-gray-900 text-white h-11">
-        <div className="container mx-auto flex items-center justify-between w-full px-6">
-          <span className="text-sm">
-            <span className="text-orange-400 font-semibold">
-              {t("header.openingHours")}:{" "}
-            </span>
-            {t("headerTop.openingHoursValue")}
-          </span>
+  const topLinkClass = "whitespace-nowrap text-white/85 transition-colors hover:text-orange-400";
 
-          <div className="flex items-center gap-6 text-sm">
-            <div className="flex items-center gap-4 border-s border-gray-500 ps-4">
+  return (
+    <header className="sticky top-0 z-[900] bg-white" dir={isRTL ? "rtl" : "ltr"}>
+      <div className="bg-gray-900 text-white">
+        <div className="container mx-auto flex h-9 xl:h-11 items-center justify-between gap-3 px-4 xl:px-6">
+          <p className="flex min-w-0 items-center gap-1.5 text-[11px] xl:text-sm">
+            <Clock className="h-3.5 w-3.5 shrink-0 text-orange-400" aria-hidden />
+            <span className="truncate">
+              <span className="hidden font-semibold text-orange-400 sm:inline">
+                {t("header.openingHours")}:{" "}
+              </span>
+              <span className="xl:hidden">{t("header.openingHoursShort")}</span>
+              <span className="hidden xl:inline">{t("headerTop.openingHoursValue")}</span>
+            </span>
+          </p>
+
+          <div className="flex shrink-0 items-center gap-3 text-[11px] xl:gap-5 xl:text-sm">
+            <div className="flex items-center gap-3 xl:gap-4 xl:border-s xl:border-white/20 xl:ps-5">
               {user ? (
                 <>
                   {user.role === "admin" ? (
-                    <NavLink to="/admin" className="hover:text-orange-400">
+                    <NavLink to="/admin" className={topLinkClass}>
                       {t("seo.admin.title")}
                     </NavLink>
                   ) : null}
-                  <button
-                    type="button"
-                    onClick={logout}
-                    className="hover:text-orange-400"
-                  >
+                  <button type="button" onClick={logout} className={topLinkClass}>
                     {t("auth.logout")}
                   </button>
                 </>
               ) : (
                 <>
-                  <NavLink to="/login" className="hover:text-orange-400">
-                    {t("header.login")}
+                  <NavLink to="/login" className={topLinkClass}>
+                    <span className="sm:hidden">{t("header.loginCompact")}</span>
+                    <span className="hidden sm:inline">{t("header.login")}</span>
                   </NavLink>
-                  <NavLink to="/register" className="hover:text-orange-400">
-                    {t("header.register")}
+                  <NavLink to="/register" className={topLinkClass}>
+                    <span className="sm:hidden">{t("header.registerCompact")}</span>
+                    <span className="hidden sm:inline">{t("header.register")}</span>
                   </NavLink>
                 </>
               )}
-              <NavLink to="/help" className="hover:text-orange-400">
+              <NavLink to="/help" className={`${topLinkClass} hidden xl:inline`}>
                 {t("header.help")}
               </NavLink>
             </div>
 
-            <div className="flex items-center gap-3 ps-4">
-              <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="hover:text-orange-400">
-                <Facebook className="w-4 h-4" />
+            <div className="hidden items-center gap-3 border-s border-white/20 ps-5 xl:flex">
+              <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="text-white/85 hover:text-orange-400">
+                <Facebook className="h-4 w-4" />
               </a>
-              <a href="https://x.com" target="_blank" rel="noopener noreferrer" aria-label="X" className="hover:text-orange-400">
-                <Twitter className="w-4 h-4" />
+              <a href="https://x.com" target="_blank" rel="noopener noreferrer" aria-label="X" className="text-white/85 hover:text-orange-400">
+                <Twitter className="h-4 w-4" />
               </a>
-              <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="hover:text-orange-400">
-                <Linkedin className="w-4 h-4" />
+              <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="text-white/85 hover:text-orange-400">
+                <Linkedin className="h-4 w-4" />
               </a>
-              <a href={`mailto:${siteContact.email}`} aria-label="Email" className="hover:text-orange-400">
-                <FaGoogle className="w-4 h-4" />
+              <a href={`mailto:${siteContact.email}`} aria-label="Email" className="text-white/85 hover:text-orange-400">
+                <FaGoogle className="h-4 w-4" />
               </a>
             </div>
           </div>
@@ -125,13 +134,15 @@ export default function Header() {
       </div>
 
       <nav
-        className="bg-white shadow-sm border-b relative"
+        className="relative border-b border-gray-100 bg-white shadow-sm"
         dir={isRTL ? "rtl" : "ltr"}
       >
-        <div className="container mx-auto flex items-center justify-between py-3 px-6">
-          <NavLink to="/" className="flex items-center no-underline gap-2">
-            <BrandLogo className="w-14 h-14" />
-            <span className="text-3xl font-bold text-gray-700">{SITE_NAME}</span>
+        <div className="container mx-auto flex items-center justify-between px-4 py-2.5 xl:px-6 xl:py-3">
+          <NavLink to="/" className="flex items-center gap-2 no-underline">
+            <BrandLogo className="h-10 w-10 xl:h-14 xl:w-14" />
+            <span className="text-xl font-bold tracking-tight text-gray-800 xl:text-3xl">
+              {SITE_NAME}
+            </span>
           </NavLink>
 
           <div className="hidden xl:flex items-center gap-6 2xl:gap-10">
@@ -173,37 +184,38 @@ export default function Header() {
             </button>
           </div>
 
-          <button
-            className="xl:hidden p-2"
-            onClick={() => setMobileOpen(!mobileOpen)}
-            aria-expanded={mobileOpen}
-            aria-controls="primary-mobile-navigation"
-            aria-label={mobileOpen ? t("a11y.closeMenu") : t("a11y.openMenu")}
-          >
-            {mobileOpen ? (
-              <X className="w-8 h-8" />
-            ) : (
-              <Menu className="w-8 h-8" />
-            )}
-          </button>
+          <div className="flex items-center gap-1 xl:hidden">
+            <LanguageSwitcher />
+            <button
+              className="p-2 text-gray-800"
+              onClick={() => setMobileOpen(!mobileOpen)}
+              aria-expanded={mobileOpen}
+              aria-controls="primary-mobile-navigation"
+              aria-label={mobileOpen ? t("a11y.closeMenu") : t("a11y.openMenu")}
+            >
+              {mobileOpen ? (
+                <X className="h-7 w-7" />
+              ) : (
+                <Menu className="h-7 w-7" />
+              )}
+            </button>
+          </div>
         </div>
 
         <div
           id="primary-mobile-navigation"
-          className={`xl:hidden absolute inset-s-0 inset-e-0 w-full bg-white shadow-md transition-all duration-300 overflow-hidden ${
+          className={`xl:hidden absolute inset-s-0 inset-e-0 z-50 w-full overflow-hidden bg-white shadow-md transition-all duration-300 ${
             mobileOpen ? "max-h-screen opacity-100" : "max-h-0 opacity-0"
           }`}
         >
-          <div
-            className={`flex flex-col items-center gap-8 py-8 ${isRTL ? "text-right" : "text-left"}`}
-          >
+          <div className="flex flex-col gap-5 px-6 py-6">
             {navLinks.map(({ to, label, end }) => (
               <NavLink
                 key={to}
                 to={to}
                 end={end}
                 className={({ isActive }) =>
-                  `relative group text-xl font-semibold transition-colors duration-300 ${
+                  `text-base font-semibold transition-colors duration-300 ${
                     isActive
                       ? "text-orange-500"
                       : "text-gray-800 hover:text-orange-500"
@@ -212,17 +224,62 @@ export default function Header() {
                 onClick={() => setMobileOpen(false)}
               >
                 {label}
-                <span className="absolute inset-s-0 -bottom-1 h-[2px] w-0 bg-orange-500 transition-all duration-300 group-hover:w-full" />
               </NavLink>
             ))}
 
-            <div className="flex items-center justify-center">
-              <LanguageSwitcher />
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-gray-100 pt-4 text-sm font-medium">
+              {user ? (
+                <>
+                  {user.role === "admin" ? (
+                    <NavLink
+                      to="/admin"
+                      className="text-gray-700 hover:text-orange-500"
+                      onClick={() => setMobileOpen(false)}
+                    >
+                      {t("seo.admin.title")}
+                    </NavLink>
+                  ) : null}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      logout();
+                      setMobileOpen(false);
+                    }}
+                    className="text-gray-700 hover:text-orange-500"
+                  >
+                    {t("auth.logout")}
+                  </button>
+                </>
+              ) : (
+                <>
+                  <NavLink
+                    to="/login"
+                    className="text-gray-700 hover:text-orange-500"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    {t("header.login")}
+                  </NavLink>
+                  <NavLink
+                    to="/register"
+                    className="text-gray-700 hover:text-orange-500"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    {t("header.register")}
+                  </NavLink>
+                </>
+              )}
+              <NavLink
+                to="/help"
+                className="text-gray-700 hover:text-orange-500"
+                onClick={() => setMobileOpen(false)}
+              >
+                {t("header.help")}
+              </NavLink>
             </div>
 
             <NavLink
               to="/contact"
-              className="bg-orange-500 text-white font-semibold px-6 py-2 rounded hover:bg-orange-600 transition"
+              className="bg-orange-500 px-6 py-2.5 text-center text-sm font-semibold text-white transition hover:bg-orange-600"
               onClick={() => setMobileOpen(false)}
             >
               {t("header.contactUs")}
