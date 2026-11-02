@@ -8,7 +8,7 @@ export const getSiteUrl = () => {
   if (typeof window !== "undefined") {
     return window.location.origin;
   }
-  return "http://localhost:5175";
+  return "https://velloraa.vercel.app";
 };
 
 export const siteContact = {
@@ -51,7 +51,7 @@ export function organizationJsonLd() {
     name: SITE_NAME,
     url,
     logo: `${url}/icon-512.png`,
-    image: `${url}/og-cover.webp`,
+    image: `${url}/og-image.jpg`,
     email: siteContact.email,
     telephone: siteContact.phone,
     address: {

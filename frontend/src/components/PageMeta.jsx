@@ -33,7 +33,7 @@ export default function PageMeta({
   title,
   description,
   path = "/",
-  image = "/og-cover.webp",
+  image = "/og-image.jpg",
   noIndex = false,
   jsonLd,
 }) {
@@ -54,6 +54,11 @@ export default function PageMeta({
     upsertMeta("property", "og:description", description);
     upsertMeta("property", "og:url", url);
     upsertMeta("property", "og:image", absoluteImage);
+    upsertMeta("property", "og:image:secure_url", absoluteImage);
+    upsertMeta("property", "og:image:type", absoluteImage.endsWith(".jpg") ? "image/jpeg" : "image/png");
+    upsertMeta("property", "og:image:width", "1200");
+    upsertMeta("property", "og:image:height", "630");
+    upsertMeta("property", "og:image:alt", "VELORA");
     upsertMeta("property", "og:type", "website");
     upsertMeta("property", "og:site_name", "VELORA");
     upsertMeta("property", "og:locale", lang === "ar" ? "ar_SA" : "en_US");
