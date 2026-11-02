@@ -33,7 +33,7 @@ export default function PageMeta({
   title,
   description,
   path = "/",
-  image = "/og-image.jpg",
+  image = "/og-share.jpg",
   noIndex = false,
   jsonLd,
 }) {

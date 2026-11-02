@@ -51,7 +51,7 @@ export function organizationJsonLd() {
     name: SITE_NAME,
     url,
     logo: `${url}/icon-512.png`,
-    image: `${url}/og-image.jpg`,
+    image: `${url}/og-share.jpg`,
     email: siteContact.email,
     telephone: siteContact.phone,
     address: {

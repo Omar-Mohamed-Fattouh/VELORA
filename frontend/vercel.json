@@ -1,6 +1,15 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "installCommand": "npm install && npm install --prefix ../backend",
+  "headers": [
+    {
+      "source": "/og-share.jpg",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=86400, immutable" },
+        { "key": "Content-Type", "value": "image/jpeg" }
+      ]
+    }
+  ],
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api" },
     { "source": "/((?!api/).*)", "destination": "/index.html" }

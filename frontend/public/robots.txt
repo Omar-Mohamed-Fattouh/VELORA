@@ -3,3 +3,5 @@ Allow: /
 Disallow: /admin
 Disallow: /login
 Disallow: /register
+
+Sitemap: https://velloraa.vercel.app/sitemap.xml
