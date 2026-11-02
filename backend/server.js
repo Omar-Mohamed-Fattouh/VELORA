@@ -32,7 +32,7 @@ const allowedOrigins = [
 const isAllowedOrigin = (origin) => {
   if (!origin) return true;
   if (allowedOrigins.includes(origin)) return true;
-  return /^https:\/\/([a-z0-9-]+\.)*vercel\.app$/i.test(origin);
+  return /^https:\/\/([a-z0-9-]+\.)*(vercel\.app|tmp\.now)$/i.test(origin);
 };
 
 const cookieOptions = {
