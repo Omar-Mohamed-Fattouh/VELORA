@@ -7,6 +7,7 @@ import BestProject from "../components/BestProjects";
 import InterestForm from "../components/InterestForm";
 import RelatedProductsSection from "../components/RelatedProductsSection";
 import PageMeta from "../components/PageMeta.jsx";
+import Loader from "../components/Loader.jsx";
 import apiRequest from "../services/api.js";
 import { breadcrumbJsonLd, propertyJsonLd } from "../data/site.js";
 import { localizeProperty } from "../data/propertyI18n.js";
@@ -18,23 +19,30 @@ const ProjectDetails = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let cancelled = false;
     const loadProject = async () => {
+      setLoading(true);
       try {
         const data = await apiRequest(`/properties/${id}`);
-        setProperty(localizeProperty(data.data?.item || null, i18n.language));
+        if (!cancelled) {
+          setProperty(localizeProperty(data.data?.item || null, i18n.language));
+        }
       } catch (error) {
         console.error(error);
-        setProperty(null);
+        if (!cancelled) setProperty(null);
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     };
 
     if (id) loadProject();
+    return () => {
+      cancelled = true;
+    };
   }, [id, i18n.language]);
 
   if (loading) {
-    return <div className="p-10 text-center text-slate-600">{t("a11y.loading")}</div>;
+    return <Loader />;
   }
 
   if (!property) {

@@ -4,7 +4,12 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { ChevronDown, Check } from "lucide-react";
-import img from "../assets/img3.webp";
+import faqCover from "../assets/img1.webp";
+import faqAnswer1 from "../assets/img2.webp";
+import faqAnswer2 from "../assets/house1.webp";
+import faqAnswer3 from "../assets/aboutSection4.webp";
+import faqAnswer4 from "../assets/Hero1.webp";
+import faqAnswer5 from "../assets/house2.webp";
 
 export default function FAQSection() {
   const { t, i18n } = useTranslation();
@@ -14,31 +19,31 @@ export default function FAQSection() {
       id: 1,
       question: t("faq.question1"),
       content: t("faq.answer1"),
-      image: img,
+      image: faqAnswer1,
     },
     {
       id: 2,
       question: t("faq.question2"),
       content: t("faq.answer2"),
-      image: img,
+      image: faqAnswer2,
     },
     {
       id: 3,
       question: t("faq.question3"),
       content: t("faq.answer3"),
-      image: img,
+      image: faqAnswer3,
     },
     {
       id: 4,
       question: t("faq.question4"),
       content: t("faq.answer4"),
-      image: img,
+      image: faqAnswer4,
     },
     {
       id: 5,
       question: t("faq.question5"),
       content: t("faq.answer5"),
-      image: img,
+      image: faqAnswer5,
     },
   ];
   const [expandedItem, setExpandedItem] = useState(1);
@@ -82,29 +87,26 @@ export default function FAQSection() {
             <div className="bg-white rounded-2xl p-4 sm:p-6 border border-orange-200">
               <div className="relative">
                 <img
-                  src={img}
+                  src={faqCover}
                   alt={t("faq.propertyImageAlt")}
                   width={800}
                   height={520}
                   loading="lazy"
                   decoding="async"
-                  className="w-full h-48 sm:h-64 object-cover rounded-xl"
+                  className="h-52 w-full rounded-xl object-cover object-center sm:h-72"
                 />
 
-                {/* Property Info Overlay */}
-                <div
-                  className={`absolute bottom-3 ${isRTL ? "left-3" : "right-3"} sm:bottom-4 ${isRTL ? "sm:left-4" : "sm:right-4"} bg-white/90 backdrop-blur-md rounded-lg p-3 sm:p-4 shadow-lg w-48 sm:w-64`}
-                >
+                <div className="mt-3 w-full rounded-lg bg-white p-3 shadow-sm sm:absolute sm:bottom-4 sm:end-4 sm:mt-0 sm:w-56 sm:bg-white/95 sm:p-4 sm:shadow-lg">
                   <h3 className="font-semibold text-gray-900 mb-2 sm:mb-3 text-sm sm:text-base">
                     {t("faq.cardTitle")}
                   </h3>
                   <div className="space-y-2">
                     <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-700">
-                      <Check className="w-4 h-4 text-orange-500" />
+                      <Check className="w-4 h-4 shrink-0 text-orange-500" />
                       <span>{t("faq.cardItem1")}</span>
                     </div>
                     <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-700">
-                      <Check className="w-4 h-4 text-orange-500" />
+                      <Check className="w-4 h-4 shrink-0 text-orange-500" />
                       <span>{t("faq.cardItem2")}</span>
                     </div>
                   </div>
@@ -178,11 +180,11 @@ export default function FAQSection() {
                             {item.image && (
                               <div className="flex-shrink-0">
                                 <img
-                                  src={item.image || "/placeholder.svg"}
+                                  src={item.image}
                                   alt={t("faq.answerImageAlt")}
                                   loading="lazy"
                                   decoding="async"
-                                  className="w-full sm:w-40 h-28 sm:h-24 object-cover rounded-lg"
+                                  className="h-32 w-full rounded-lg object-cover object-center sm:h-24 sm:w-40"
                                 />
                               </div>
                             )}

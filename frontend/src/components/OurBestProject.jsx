@@ -7,6 +7,7 @@ import { MapPin, MapPinned, Video, DollarSign } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import apiRequest from "../services/api.js";
 import { localizeProperty } from "../data/propertyI18n.js";
+import Loader from "./Loader.jsx";
 
 function formatPrice(value) {
   return Number(value || 0).toLocaleString();
@@ -249,7 +250,7 @@ export default function ProjectsPage() {
   }, [loc, status, price, area, query, projects, t]);
 
   if (loading) {
-    return <section className="px-4 py-12 text-center text-slate-600">{t("a11y.loading")}</section>;
+    return <Loader />;
   }
 
   return (

@@ -6,7 +6,6 @@ import apiRequest from "../services/api.js";
 
 import CircularText from "./CircularText";
 import BrandLogo from "./BrandLogo.jsx";
-import aboutSection3 from "../assets/aboutSection3.png";
 import aboutSection6 from "../assets/aboutSection6.png";
 import heroShapeB from "../assets/heroshapeB.png";
 
@@ -69,16 +68,6 @@ export default function InterestForm() {
       {/* Form container */}
       <div className="container relative z-10 mx-auto px-3 md:px-1 py-20 sm:py-40 flex justify-center">
         <div className="bg-white relative rounded-2xl shadow-xl p-6 md:p-10 w-full max-w-md border border-orange-100">
-          {/* Floating decorative pyramids */}
-          <motion.img
-            src={aboutSection3}
-            alt=""
-            aria-hidden="true"
-            className="hidden sm:block absolute top-16 -left-22 -z-10 w-[60px] sm:w-[90px] opacity-80"
-            animate={{ y: [0, 12, 0] }}
-            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-          />
-
           {/* Floating decorative dots */}
           <motion.img
             src={aboutSection6}

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext.jsx';
 import apiRequest from '../services/api.js';
 import PageMeta from '../components/PageMeta.jsx';
+import Loader from '../components/Loader.jsx';
 import { useTranslation } from 'react-i18next';
 
 export default function AdminDashboard() {
@@ -61,7 +62,7 @@ export default function AdminDashboard() {
       </div>
 
       {loading ? (
-        <p className="text-slate-600">{t("admin.loading")}</p>
+        <Loader />
       ) : (
         <div className="grid gap-8 lg:grid-cols-2">
           <section className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">

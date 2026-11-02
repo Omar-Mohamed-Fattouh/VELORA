@@ -12,7 +12,7 @@ export default function ProjectHero() {
   return (
     <section
       dir={dir} // set text direction
-      className="relative min-h-[65vh] flex items-center bg-cover bg-center bg-no-repeat"
+      className="relative flex min-h-[50vh] items-center bg-gray-900 bg-cover bg-center bg-no-repeat sm:min-h-[65vh]"
       style={{ backgroundImage: `url(${heroHouse})` }}
     >
       {/* Overlay */}
@@ -20,7 +20,7 @@ export default function ProjectHero() {
 
       {/* Content */}
       <div className="relative z-10 container mx-auto px-6 lg:px-50">
-        <h1 className="text-6xl md:text-6xl font-bold text-white mb-4">
+        <h1 className="mb-4 text-3xl font-bold text-white sm:text-5xl md:text-6xl">
           {t("Our Best Projects")} {/* translated heading */}
         </h1>
 

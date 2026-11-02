@@ -8,22 +8,22 @@ import ScrollToTop from "./components/ScrollToTop.jsx";
 import ErrorBoundary from "./components/ErrorBoundary.jsx";
 import { useAuth } from "./context/AuthContext.jsx";
 import i18n from "./i18n";
+import Home from "./pages/Home";
+import About from "./pages/About";
+import Projects from "./pages/Projects";
+import Contact from "./pages/Contact";
+import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
+import NotFound from "./pages/NotFound";
+import Privacy from "./pages/Privacy";
+import Apartments from "./pages/Apartments";
+import Blog from "./pages/Blog";
+import Services from "./pages/Services";
+import Help from "./pages/Help";
 
-const Home = lazy(() => import("./pages/Home"));
-const About = lazy(() => import("./pages/About"));
-const Projects = lazy(() => import("./pages/Projects"));
 const ProjectDetails = lazy(() => import("./pages/ProjectDetails"));
-const Contact = lazy(() => import("./pages/Contact"));
-const LoginPage = lazy(() => import("./pages/LoginPage"));
-const RegisterPage = lazy(() => import("./pages/RegisterPage"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
-const NotFound = lazy(() => import("./pages/NotFound"));
-const Privacy = lazy(() => import("./pages/Privacy"));
-const Apartments = lazy(() => import("./pages/Apartments"));
-const Blog = lazy(() => import("./pages/Blog"));
 const BlogPost = lazy(() => import("./pages/BlogPost"));
-const Services = lazy(() => import("./pages/Services"));
-const Help = lazy(() => import("./pages/Help"));
 
 function ProtectedRoute({ children, adminOnly = false }) {
   const { user, loading } = useAuth();

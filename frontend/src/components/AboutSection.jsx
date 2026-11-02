@@ -4,7 +4,6 @@ import { Home } from "lucide-react";
 import { Link } from "react-router-dom";
 import aboutSection1 from "../assets/aboutSection1.webp";
 import CircularText from "./CircularText";
-import aboutSection3 from "../assets/aboutSection3.png";
 import aboutSection4 from "../assets/aboutSection4.webp";
 import aboutSection5 from "../assets/aboutSection5.webp";
 import aboutSection6 from "../assets/aboutSection6.png";
@@ -44,14 +43,6 @@ const AboutSection = () => {
                 loading="lazy"
                 decoding="async"
                 className="relative z-10 w-full rounded-2xl shadow-lg"
-              />
-              <motion.img
-                src={aboutSection3}
-                alt=""
-                aria-hidden="true"
-                className="pointer-events-none absolute -start-6 top-28 z-0 w-14 select-none opacity-90 sm:-start-8 sm:w-20"
-                animate={{ y: [0, 10, 0] }}
-                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
               />
             </div>
 
